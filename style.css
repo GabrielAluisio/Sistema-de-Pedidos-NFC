@@ -64,7 +64,7 @@ body {
 .container {
     text-transform: uppercase;
     display: grid;
-    grid-template-columns: 160px 1fr;
+    grid-template-columns: 130px 1fr;
     height: calc(100vh - 60px);
     background-color: rgb(255, 255, 255);
 }
@@ -91,11 +91,11 @@ body {
     cursor: pointer;
     transition: 0.2s;
 
-    width: 160px;
-    height: 70px; /* 🔥 altura padrão */
+    width: 130px;
+    height: 50px; /* 🔥 altura padrão */
 
     display: grid;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 45px 1fr;
     align-items: center;
     padding: 5px;
 }
@@ -106,8 +106,8 @@ body {
 
 /* CAIXA DA IMAGEM */
 .menu-lateral li div {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 
     display: flex;
     justify-content: center;
@@ -123,7 +123,7 @@ body {
 
 /* TEXTO */
 .menu-lateral li h2 {
-    font-size: 12px;
+    font-size: 9px;
     margin: 0;
 }
 
@@ -142,16 +142,23 @@ body {
 
 /* PRODUTOS */
 .produtos {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 20px;
+    align-content: start;
+    justify-content: center;
 }
 
 /* CARD */
 .card {
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 200px;
+    border-radius: 7px;
+    padding: 10px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.315);
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
