@@ -9,10 +9,13 @@ body, html {
     font-family: Arial, sans-serif;
     height: 100%;
     text-transform: uppercase;
+    font-family: 'Bebas Neue', sans-serif;
+    
 }
 
-h1 {
-    font-family: 'Bebas Neue', sans-serif;
+body {
+    margin: 0;
+    overflow: hidden; 
 }
 
 .titulo-estilo {
@@ -59,7 +62,6 @@ h1 {
 /* CONTAINER PRINCIPAL */
 .container {
     text-transform: uppercase;
-
     display: grid;
     grid-template-columns: 120px 1fr;
     height: calc(100vh - 60px);
@@ -90,14 +92,41 @@ h1 {
     transition: 0.2s;
     display: flex;
     justify-content: center; 
+    flex-direction: column;
     align-items: center;     
     text-align: center;
 
 }
 
-.menu-lateral li:hover {
+.menu-lateral li:hover{
     background: #ddd;
 }
+
+.menu-lateral li > img {
+    height: 80px;
+    width: 90px;
+}
+
+.menu-lateral {
+    height: calc(100vh - 60px); /* altura menos o header */
+    overflow-y: auto;
+}
+
+.menu-lateral::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menu-lateral::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.menu-lateral {
+    position: relative;
+    overflow-y: auto;
+}
+
+
 
 /* PRODUTOS */
 .produtos {
