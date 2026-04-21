@@ -18,6 +18,36 @@ const produtos = [
         imagem: "nuggets.png"
     },
     {
+        nome: "Nuggets crocantes",
+        preco: 18.00,
+        categoria: "entradas",
+        imagem: "nuggets.png"
+    },
+    {
+        nome: "Nuggets crocantes",
+        preco: 18.00,
+        categoria: "entradas",
+        imagem: "nuggets.png"
+    },
+    {
+        nome: "Nuggets crocantes",
+        preco: 18.00,
+        categoria: "entradas",
+        imagem: "nuggets.png"
+    },
+    {
+        nome: "Nuggets crocantes",
+        preco: 18.00,
+        categoria: "entradas",
+        imagem: "nuggets.png"
+    },
+    {
+        nome: "Nuggets crocantes",
+        preco: 18.00,
+        categoria: "entradas",
+        imagem: "nuggets.png"
+    },
+    {
         nome: "X-Bacon",
         preco: 30.00,
         categoria: "burgers tradicionais",
