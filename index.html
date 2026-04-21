@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=fastfood" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,7 +16,7 @@
             <img src="imagens/ChatGPT Image 20 de abr. de 2026, 00_55_05.png" alt="logo">
         </div>
         <div id="nome_comidas" class="titulo-estilo">
-            BURGERS tradicionais
+            Entradas
         </div>
 
     </header>
@@ -23,38 +24,45 @@
     <div class="container">
         <nav class="menu-lateral">
             <ul>
-                <li><div><img src="imagens/entrada BB.png" alt=""></div><h2>Entradas</h2></li>
-                <li><div><img src="imagens/tradicional BB.png" alt=""></div><h2>Burgers Tradicionais</h2></li>
-                <li><div><img src="imagens/especial BB.png" alt=""></div><h2>Burgers especiais</h2></li>
-                <li><div><img src="imagens/vegano BB.png" alt=""></div><h2>vegetariano</h2></li>
-                <li><div><img src="imagens/bebidas.png" alt="" style="width: 80%; height: 80%;"></div><h2>bebidas</h2></li>
-                <li><div><img src="imagens/pizzas BB.png" alt=""></div><h2>nossas pizzas</h2></li>
-                <li><div><img src="imagens/pizzas doces.png" alt=""  style="width: 90%; height: 90%;"></div><h2>pizzas doces</h2></li>
-                <li><div><img src="imagens/sobremesa BB.png" alt=""></div><h2>sobremesas</h2></li>
+                <li data-categoria="entradas"><div><img src="imagens/entrada BB.png" alt="Entradas"></div><h2>Entradas</h2></li>
+                <li data-categoria="burgers tradicionais"><div><img src="imagens/tradicional BB.png" alt="Burgers Tradicionais"></div><h2>Burgers Tradicionais</h2></li>
+                <li data-categoria="burgers especiais"><div><img src="imagens/especial BB.png" alt="Burgers especiais"></div><h2>Burgers especiais</h2></li>
+                <li data-categoria="vegetariano"><div><img src="imagens/vegano BB.png" alt="vegetariano"></div><h2>vegetariano</h2></li>
+                <li data-categoria="bebidas"><div><img src="imagens/bebidas.png" alt="bebidas" style="width: 80%; height: 80%;"></div><h2>bebidas</h2></li>
+                <li data-categoria="nossas pizzas"><div><img src="imagens/pizzas BB.png" alt="nossas pizzas"></div><h2>nossas pizzas</h2></li>
+                <li data-categoria="pizzas doces"><div><img src="imagens/pizzas doces.png" alt="pizzas doces"  style="width: 90%; height: 90%;"></div><h2>pizzas doces</h2></li>
+                <li data-categoria="sobremesas"><div><img src="imagens/sobremesa BB.png" alt="sobremesas"></div><h2>sobremesas</h2></li>
             </ul>
         </nav>
 
         <section class="produtos">
-            <div class="card">
-                <img src="imagens/entrada BB.png" alt="">
-                <h3>Batata frita com bacon frito</h3>
-                <span class="preco">R$ 25,00</span>
-            </div>
-            <div class="card">
-                <img src="imagens/entrada BB.png" alt="">
-                <h3>Batata</h3>
-                <span class="preco">R$ 25,00</span>
-            </div><div class="card">
-                <img src="imagens/entrada BB.png" alt="">
-                <h3>Batata frita com bacon </h3>
-                <span class="preco">R$ 25,00</span>
-            </div><div class="card">
-                <img src="imagens/entrada BB.png" alt="">
-                <h3>Batata</h3>
-                <span class="preco">R$ 25,00</span>
-            </div>
+
         </section>
+
+        <div class="carrinho">
+            <div class="seu-pedido">
+                <p class="icon">
+                    <span class="material-symbols-outlined">
+                    fastfood
+                    </span>Seu pedido
+                </p> 
+                <p>Total R$9.99</p>
+            </div>
+            <div class="conteudo-resumo-carrinho">
+                <div class="card-carrinho">
+                    <div>1 x teste</div>
+                    <div>2 x teste</div>
+                    <div>3 x teste</div>
+                </div>
+            </div>
+            <div class="botões-conteudo-carrinho">
+                <button onclick="cancelarPedido()">Cancelar Pedido</button>
+                <button onclick="confimarPedido()">Confirmar pedido</button>
+            </div>
+        </div>
     </div>
+
+    
 </body>
 
     <script src="script.js"></script>

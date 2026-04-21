@@ -65,7 +65,8 @@ body {
     text-transform: uppercase;
     display: grid;
     grid-template-columns: 140px 1fr;
-    height: calc(100vh - 60px);
+    grid-template-rows: 1fr auto;
+    height: calc(100vh - 100px);
     background-color: rgb(255, 255, 255);
 }
 
@@ -191,4 +192,77 @@ body {
     color: rgba(0, 0, 0, 0.479);
     display: flex;
     align-items: center;
+}
+
+
+/* Carrinho */
+
+.carrinho {
+    grid-column: 1 / -1;
+    height: 200px;
+    border-top: 1px solid #ddd;
+
+}
+
+.seu-pedido {
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    background-color: rgb(10, 59, 1);
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon > span {
+    font-size: 17px;
+}
+
+.conteudo-resumo-carrinho {
+    display: flex;
+    padding: 10px 20px;
+    width: 100vw;
+    height: 90px;
+    border-bottom: 6px solid rgb(10, 59, 1);
+}
+
+.card-carrinho {
+    width: 30%;
+    max-width: 140px;
+    color: rgb(0, 0, 0);
+    font-size: 11px;
+    border: 2px solid rgba(0, 0, 0, 0.699);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding: 2px 10px ;
+    gap: 5px;
+}
+
+.card-carrinho > div:not(:last-child) {
+    border-bottom: 2px dotted rgba(0, 0, 0, 0.486);
+}
+
+.botões-conteudo-carrinho{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100vw;
+    height: 55px; 
+
+}
+
+.botões-conteudo-carrinho > button {
+    width: 160px;
+    height: 30px;
+
+
 }
