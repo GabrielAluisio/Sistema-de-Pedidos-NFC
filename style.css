@@ -162,7 +162,6 @@ body {
     max-width: 130px;
     min-width: 70px;
     display: grid;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.308);
     grid-template-rows: 80px 1fr;
 }
 
@@ -179,6 +178,11 @@ body {
     display: flex;
     text-align: left;
     color: rgba(0, 0, 0, 0.849);
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
 }
 
 .card .preco {
