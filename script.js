@@ -62,9 +62,11 @@ function naoCarrinho() {
     const carrinhoEl = document.querySelector(".carrinho");
 
     if (carrinho.length === 0) {
-        carrinhoEl.style.display = "none";
+        carrinhoEl.classList.add("escondido");
+        carrinhoEl.classList.remove("visivel");
     } else {
-        carrinhoEl.style.display = "block";
+        carrinhoEl.classList.remove("escondido");
+        carrinhoEl.classList.add("visivel");
     }
 }
 

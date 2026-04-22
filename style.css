@@ -23,6 +23,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background-image: linear-gradient(black, white);
 }
 .titulo-estilo {
     font-family: 'Permanent Marker', cursive;
@@ -212,7 +213,18 @@ body {
     grid-column: 1 / -1;
     height: 300px;
     border-top: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
 
+.carrinho.escondido {
+    opacity: 0;
+    transform: translateY(50px);
+    pointer-events: none;
+}
+
+.carrinho.visivel {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .seu-pedido {
