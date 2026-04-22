@@ -12,6 +12,7 @@ html {
 
 body, html {
     font-family: Arial, sans-serif;
+    height: 100%;
     text-transform: uppercase;
     font-family: 'Inter', sans-serif;
     
@@ -19,11 +20,10 @@ body, html {
 
 body {
     margin: 0;
-    min-height: 100dvh;
-    overflow-y: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    background-image: linear-gradient(white, black);
+    background-image: linear-gradient( black, white);
 }
 .titulo-estilo {
     font-family: 'Permanent Marker', cursive;
