@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 body, html {
     font-family: Arial, sans-serif;
     height: 100%;
@@ -15,10 +20,10 @@ body, html {
 
 body {
     margin: 0;
-    overflow: hidden; 
-    background-color: rgb(0, 0, 0);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
-
 .titulo-estilo {
     font-family: 'Permanent Marker', cursive;
 }
@@ -61,12 +66,14 @@ body {
 
 
 /* CONTAINER PRINCIPAL */
+
 .container {
-    text-transform: uppercase;
+    flex: 1;
     display: grid;
     grid-template-columns: 140px 1fr;
     grid-template-rows: 1fr auto;
-    height: calc(100vh - 100px);
+    min-height: 0;
+    text-transform: uppercase;
     background-color: rgb(255, 255, 255);
 }
 
@@ -167,6 +174,7 @@ body {
     min-width: 70px;
     display: grid;
     grid-template-rows: 80px 1fr;
+    cursor: pointer;
 }
 
 .card img {
@@ -236,6 +244,7 @@ body {
     height: auto;
     border-bottom: 6px solid rgb(10, 59, 1);
     align-items: flex-start; 
+    height: 145px;
 }
 
 .card-carrinho {
