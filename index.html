@@ -12,6 +12,7 @@
 </head>
 <body>
     <header id="header_logo">
+        
         <div id="logo">
             <img src="imagens/ChatGPT Image 20 de abr. de 2026, 00_55_05.png" alt="logo">
         </div>
@@ -39,7 +40,7 @@
 
         </section>
 
-        <div class="carrinho escondido">
+        <div class="carrinho">
             <div class="seu-pedido">
                 <p class="icon">
                     <span class="material-symbols-outlined">
@@ -55,12 +56,103 @@
             </div>
             <div class="botões-conteudo-carrinho">
                 <button onclick="cancelarPedido()">Cancelar Pedido</button>
-                <button onclick="confimarPedido()">Confirmar pedido</button>
+                <button onclick="verPedido()">ver seu pedido</button>
             </div>
         </div>
     </div>
 
+    <div class="verPedido escondido">
+        <header id="header_logo">
+            <div id="logo">
+                <img src="imagens/ChatGPT Image 20 de abr. de 2026, 00_55_05.png" alt="logo">
+            </div>
+            <div id="nome_comidas" class="titulo-estilo">
+                Seu pedido
+            </div>
+        </header>
+
+        <section class="conteinerCarrinho">
+            <div class="itensConteinerCarrinho">
+                <img src="imagens/especial BB.png" alt="">
+
+                <div class="meioNome">
     
+                    <div class="linha1">
+                        <h3>Nome</h3>
+
+                        <div class="quantidade">
+                            <button class="diminuir">-</button>
+                            <span class="qtd">1</span>
+                            <button class="aumentar">+</button>
+                        </div>
+                    </div>
+
+                    <div class="linha2">
+                        <button class="detalhe">Detalhes</button>
+                        <button class="excluir">Excluir</button>
+                    </div>
+
+                </div>
+
+
+                <span class="preco">R$ 10,00</span>
+            </div>
+            <div class="itensConteinerCarrinho">
+                <img src="imagens/especial BB.png" alt="">
+
+                <div class="meioNome">
+    
+                    <div class="linha1">
+                        <h3>Nome</h3>
+
+                        <div class="quantidade">
+                            <button class="diminuir">-</button>
+                            <span class="qtd">1</span>
+                            <button class="aumentar">+</button>
+                        </div>
+                    </div>
+
+                    <div class="linha2">
+                        <button class="detalhe">Detalhes</button>
+                        <button class="excluir">Excluir</button>
+                    </div>
+
+                </div>
+
+
+                <span class="preco">R$ 10,00</span>
+            </div>
+            <div class="itensConteinerCarrinho">
+                <img src="imagens/especial BB.png" alt="">
+
+                <div class="meioNome">
+    
+                    <div class="linha1">
+                        <h3>Nome</h3>
+
+                        <div class="quantidade">
+                            <button class="diminuir">-</button>
+                            <span class="qtd">1</span>
+                            <button class="aumentar">+</button>
+                        </div>
+                    </div>
+
+                    <div class="linha2">
+                        <button class="detalhe">Detalhes</button>
+                        <button class="excluir">Excluir</button>
+                    </div>
+
+                </div>
+
+
+                <span class="preco">R$ 10,00</span>
+            </div>
+        </section>
+        <footer class="resumo">
+            <p>Total: R$ 119,70</p>
+            <button>Pedido completo</button>
+        </footer>
+    </div>
 </body>
 
     <script src="script.js"></script>

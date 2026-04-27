@@ -58,16 +58,20 @@ const produtos = [
 
 let carrinho = [];
 
-function naoCarrinho() {
-    const carrinhoEl = document.querySelector(".carrinho");
+function verPedido(){
+    const verPedido = document.querySelector(".verPedido");
 
+    verPedido.classList.remove("escondido");
+    verPedido.classList.add("visivel");
+
+    /*
     if (carrinho.length === 0) {
-        carrinhoEl.classList.add("escondido");
-        carrinhoEl.classList.remove("visivel");
+        verPedido.classList.add("escondido");
+        verPedido.classList.remove("visivel");
     } else {
-        carrinhoEl.classList.remove("escondido");
-        carrinhoEl.classList.add("visivel");
-    }
+        verPedido.classList.remove("escondido");
+        verPedido.classList.add("visivel");
+    }*/
 }
 
 function renderizarProdutos(categoria) {
