@@ -73,9 +73,9 @@ function verPedido(){
                         <h3>${item.nome}</h3>
 
                         <div class="quantidade">
-                            <button class="diminuir">-</button>
+                            <button class="diminuir" onclick="diminuir()">-</button>
                             <span class="qtd">${item.quantidade}</span>
-                            <button class="aumentar">+</button>
+                            <button class="aumentar" onclick="aumentar()">+</button>
                         </div>
                     </div>
 
@@ -104,23 +104,6 @@ function verPedido(){
 
 
     footterPrecoTotal.innerHTML = `R$ ${precoTotal.toFixed(2)}`;
-
-
-
-
-
-
-
-
-
-    /*
-    if (carrinho.length === 0) {
-        verPedido.classList.add("escondido");
-        verPedido.classList.remove("visivel");
-    } else {
-        verPedido.classList.remove("escondido");
-        verPedido.classList.add("visivel");
-    }*/
 }
 
 function renderizarProdutos(categoria) {
@@ -152,54 +135,54 @@ function renderizarProdutos(categoria) {
 
 
 function atualizarCarrinho() {
-        const container = document.querySelector(".card-carrinho");
-        const precoResumo = document.querySelector(".preço-resumo");
+    const container = document.querySelector(".card-carrinho");
+    const precoResumo = document.querySelector(".preço-resumo");
 
 
-        container.innerHTML = "";
+    container.innerHTML = "";
 
-        let precoTotal = 0
-        
-        carrinho.forEach(item => {
-            precoTotal += (item.preco * item.quantidade) 
-        });
+    let precoTotal = 0
+    
+    carrinho.forEach(item => {
+        precoTotal += (item.preco * item.quantidade) 
+    });
 
-        precoResumo.innerHTML = `Total R$ ${precoTotal.toFixed(2)}`;
+    precoResumo.innerHTML = `Total R$ ${precoTotal.toFixed(2)}`;
 
-        carrinho.forEach(item => {
-            container.innerHTML += `
-                <div class="item-carrinho">
-                    <p>${item.quantidade}x ${item.nome}</p>
-                </div>
-            `;
-        });
+    carrinho.forEach(item => {
+        container.innerHTML += `
+            <div class="item-carrinho">
+                <p>${item.quantidade}x ${item.nome}</p>
+            </div>
+        `;
+    });
 
-        
-        if (carrinho.length === 0) {
-            container.style.border = 'none';
-        } else {
-            container.style.border = '2px solid rgba(0, 0, 0, 0.699)';
-        }
-
-        
+    
+    if (carrinho.length === 0) {
+        container.style.border = 'none';
+    } else {
+        container.style.border = '2px solid rgba(0, 0, 0, 0.699)';
     }
 
-    function adicionarAoCarrinho(produto) {
+        
+}
 
-        const itemExistente = carrinho.find(item => item.nome === produto.nome);
+function adicionarAoCarrinho(produto) {
 
-        if (itemExistente) {
-            itemExistente.quantidade += 1;
-        } else {
-            carrinho.push({
-                ...produto,
-                quantidade: 1
-            });
-        }
+    const itemExistente = carrinho.find(item => item.nome === produto.nome);
 
-        atualizarCarrinho();
-        botaoVerItem()
+    if (itemExistente) {
+        itemExistente.quantidade += 1;
+    } else {
+        carrinho.push({
+            ...produto,
+            quantidade: 1
+        });
     }
+
+    atualizarCarrinho();
+    botaoVerItem()
+}
 
 document.querySelectorAll(".menu-lateral li").forEach(item => {
     item.addEventListener("click", () => {
