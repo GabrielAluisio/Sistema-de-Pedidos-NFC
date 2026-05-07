@@ -7,22 +7,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const produtos = [
     {
-        nome: "Batata frita com bacon e cheddar",
-        preco: 25.00,
+        nome: "Batata frita",
+        preco: 20.00,
         categoria: "entradas",
-        imagem: "batata.png"
+        imagem: "batatafrita.png"
     },
     {
-        nome: "Nuggets crocantes",
-        preco: 18.00,
+        nome: "Batata frita com bacon e cheddar",
+        preco: 36.00,
+        categoria: "entradas",
+        imagem: "batatacomcheddarebacon.png"
+    },
+    {
+        nome: "Nuggets",
+        preco: 24.00,
         categoria: "entradas",
         imagem: "nuggets.png"
     },
     {
-        nome: "X-Bacon",
+        nome: "Big Black",
         preco: 30.00,
         categoria: "burgers tradicionais",
-        imagem: "xbacon.png"
+        imagem: "tradicional BB.png"
     }
 ];
 
