@@ -3,13 +3,19 @@ import mysql.connector
 #biblioteca API
 from flask import Flask, request, jsonify
 
-app = Flask(__name__)
-
-
 
 #puxar dados do BD no .env
 from dotenv import load_dotenv
 import os
+
+#Biblioteca para o navegador na bloquear 
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+
 
 load_dotenv()
 

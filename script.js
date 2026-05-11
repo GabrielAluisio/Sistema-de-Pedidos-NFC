@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    botaoVerItem();
     verificarPedidoExistente();
+    botaoVerItem();
+    
 });
 
 /*Função de exemplo*/
@@ -34,24 +35,101 @@ const produtos = [
 
 let carrinho = [];
 
-function novoPedido() {
-    entrarSistema();
+
+let pedido_id = null;
+
+
+/*Cria uma nova comanda no Bancos de dados. Back: "INSERT INTO Pedidos (mesa_id, status) VALUES (%s, 'aberto')",*/ 
+async function novoPedido() {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const mesaId = params.get("mesa");
+
+    try {
+
+        const response = await fetch("http://localhost:5000/pedido", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                mesa_id: mesaId
+            })
+        });
+
+        const data = await response.json();
+
+        pedido_id = data.pedido_id;
+
+        console.log("Pedido criado:", pedido_id);
+
+        entrarSistema();
+
+    } catch (erro) {
+
+        console.log("Erro ao criar pedido:", erro);
+
+    }
 }
 
-function continuarPedido() {
-    alert("Tela de continuar pedido");
-}
+/// Verifica se o pedido Existe no Bancos de dados
+async function verificarPedidoExistente() {
 
-function verificarPedidoExistente() {
     const btnContinuar = document.querySelector(".btnContinuar");
 
-    if (carrinho.length === 0) {
-        btnContinuar.disabled = true;
-        btnContinuar.style.opacity = "0.5";
-    } else {
+    const params = new URLSearchParams(window.location.search);
+
+    const mesaId = params.get("mesa");
+
+    const response = await fetch(
+        `http://localhost:5000/pedido/mesa/${mesaId}`
+    );
+
+    const data = await response.json();
+
+    if (data.id) {
+
+        pedido_id = data.id;
+
         btnContinuar.disabled = false;
         btnContinuar.style.opacity = "1";
+        btnContinuar.style.cursor = "pointer";
+
+    } else {
+
+        btnContinuar.disabled = true;
+        btnContinuar.style.opacity = "0.5";
+        btnContinuar.style.cursor = "not-allowed";
     }
+}
+
+async function continuarPedido() {
+
+    const params = new URLSearchParams(window.location.search);
+    const mesaId = params.get("mesa");
+
+    const response = await fetch(
+        `http://localhost:5000/pedido/mesa/${mesaId}`
+    );
+
+    /// Resposta do Back
+    const data = await response.json();
+
+    if (data.id) {
+
+        pedido_id = data.id;
+
+        entrarSistema();
+
+    } else {
+
+        alert("Nenhum pedido aberto");
+
+    }
+
 }
 
 
