@@ -149,6 +149,7 @@ def listar_itens(pedido_id):
         SELECT 
             ip.id,
             p.nome,
+            p.imagem_url,
             ip.quantidade,
             ip.preco_unitario
         FROM Itens_pedido ip

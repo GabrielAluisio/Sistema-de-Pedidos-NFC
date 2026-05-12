@@ -13,14 +13,14 @@ let carrinho = [];
 let pedido_id = null;
 
 const categorias = {
-    entradas: 1,
+    "entradas": 1,
     "burgers tradicionais": 2,
     "burgers especiais": 3,
-    vegetariano: 4,
-    bebidas: 5,
+    "vegetariano": 4,
+    "bebidas": 5,
     "nossas pizzas": 6,
     "pizzas doces": 7,
-    sobremesas: 8
+    "sobremesas": 8
 };
 
 
@@ -54,41 +54,29 @@ function entrarSistema() {
     renderizarProdutos("entradas");
 }
 
-
 /*Cria uma nova comanda no Bancos de dados. Back: "INSERT INTO Pedidos (mesa_id, status) VALUES (%s, 'aberto')",*/ 
+let criandoPedido = false;
+
 async function novoPedido() {
 
-    const params = new URLSearchParams(window.location.search);
+    if (criandoPedido) return;
+    criandoPedido = true;
 
+    const params = new URLSearchParams(window.location.search);
     const mesaId = params.get("mesa");
 
-    try {
+    const response = await fetch("http://localhost:5000/pedido", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mesa_id: mesaId })
+    });
 
-        const response = await fetch("http://localhost:5000/pedido", {
-            method: "POST",
+    const data = await response.json();
+    pedido_id = data.pedido_id;
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    entrarSistema();
 
-            body: JSON.stringify({
-                mesa_id: mesaId
-            })
-        });
-
-        const data = await response.json();
-
-        pedido_id = data.pedido_id;
-
-        console.log("Pedido criado:", pedido_id);
-
-        entrarSistema();
-
-    } catch (erro) {
-
-        console.log("Erro ao criar pedido:", erro);
-
-    }
+    criandoPedido = false;
 }
 
 /// Verifica se o pedido Existe no Bancos de dados
@@ -124,9 +112,22 @@ async function verificarPedidoExistente() {
 
 async function continuarPedido() {
 
-    entrarSistema();
+    const response = await fetch(
+        `http://localhost:5000/pedido/${pedido_id}/itens`
+    );
+
+    const itens = await response.json();
+
+    carrinho = itens.map(item => ({
+        id: item.id,
+        nome: item.nome,
+        quantidade: item.quantidade,
+        preco: item.preco_unitario,
+        imagem_url: item.imagem_url
+    }));
 
     atualizarCarrinho();
+    verPedido();
 }
 
 
@@ -206,7 +207,7 @@ function verPedido(){
     carrinho.forEach(item => {
         conteinerCarrinho.innerHTML += `
             <div class="itensConteinerCarrinho">
-                <img src="imagens/${item.imagem}" alt="">
+                <img src="imagens/${item.imagem_url}" alt="">
 
                 <div class="meioNome">
     
@@ -228,7 +229,7 @@ function verPedido(){
                 </div>
 
 
-                <span class="preco">R$ ${item.preco.toFixed(2)}</span>
+                <span class="preco">R$ ${Number(item.preco).toFixed(2)}</span>
             </div>
         `;
     });
@@ -240,7 +241,9 @@ function verPedido(){
     let precoTotal = 0
         
     carrinho.forEach(item => {
-        precoTotal += (item.preco * item.quantidade) 
+        precoTotal += (
+            Number(item.preco) * item.quantidade
+        )
     });
 
 
@@ -288,18 +291,16 @@ function atualizarCarrinho() {
     const container = document.querySelector(".card-carrinho");
     const precoResumo = document.querySelector(".preço-resumo");
 
-
     container.innerHTML = "";
 
-    let precoTotal = 0
-    
-    carrinho.forEach(item => {
-        precoTotal += (item.preco * item.quantidade) 
-    });
-
-    precoResumo.innerHTML = `Total R$ ${precoTotal.toFixed(2)}`;
+    let precoTotal = 0;
 
     carrinho.forEach(item => {
+
+        const preco = Number(item.preco || item.preco_unitario);
+
+        precoTotal += preco * item.quantidade;
+
         container.innerHTML += `
             <div class="item-carrinho">
                 <p>${item.quantidade}x ${item.nome}</p>
@@ -307,14 +308,11 @@ function atualizarCarrinho() {
         `;
     });
 
-    
-    if (carrinho.length === 0) {
-        container.style.border = 'none';
-    } else {
-        container.style.border = '2px solid rgba(0, 0, 0, 0.699)';
-    }
+    precoResumo.innerHTML = `Total R$ ${precoTotal.toFixed(2)}`;
 
-        
+    container.style.border = carrinho.length === 0
+        ? "none"
+        : "2px solid rgba(0, 0, 0, 0.699)";
 }
 
 function adicionarAoCarrinho(produto) {
@@ -343,10 +341,70 @@ document.querySelectorAll(".menu-lateral li").forEach(item => {
     });
 });
 
-function finalizarPedido() {
-    const modal = document.querySelector(".pedidoEnviado");
+/// Adicionar os itens/produtos no bancos de dados
+async function finalizarPedido() {
 
-    modal.classList.remove("escondido");
+    try {
+
+        const params = new URLSearchParams(
+            window.location.search
+        );
+
+        const mesaId = params.get("mesa");
+
+        // cria pedido
+        const response = await fetch(
+            "http://localhost:5000/pedido",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    mesa_id: mesaId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        pedido_id = data.pedido_id;
+
+        // envia itens
+        for (const item of carrinho) {
+
+            await fetch(
+                `http://localhost:5000/pedido/${pedido_id}/item`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        produto_id: item.id,
+                        quantidade: item.quantidade
+                    })
+                }
+            );
+        }
+
+        // mostra mensagem
+        const modal =
+            document.querySelector(".pedidoEnviado");
+
+        modal.classList.remove("escondido");
+
+    } catch (erro) {
+
+        console.log(
+            "Erro ao finalizar pedido:",
+            erro
+        );
+    }
 }
 
 function fecharMensagem() {
