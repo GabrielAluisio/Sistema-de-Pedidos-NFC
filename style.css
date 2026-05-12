@@ -638,6 +638,53 @@ body {
     cursor: pointer;
 }
 
+/*Menu sanduiche*/
+.historico-container {
+    margin-top: 12px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+/* HEADER DO MENU */
+.historico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 12px;
+    margin: 0px 5px 8px 5px;
+
+    cursor: pointer;
+
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+
+    background: #fafafa;
+
+    font-weight: 600;
+    font-size: 13px;
+
+    transition: all 0.2s ease;
+}
+
+/* efeito hover */
+.historico-header:hover {
+    background: #f0f0f0;
+    transform: scale(1.01);
+}
+
+/* efeito clique */
+.historico-header:active {
+    transform: scale(0.98);
+}
+
+
+
+
+
+
+/*-------------*/
+
 .pedidoEnviado {
     position: fixed;
     top: 0;

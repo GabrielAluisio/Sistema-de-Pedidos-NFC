@@ -31,7 +31,6 @@ def conectar_bd():
 
 #Função para criar a comanda
 @app.route('/pedido', methods=['POST'])
-@app.route('/pedido', methods=['POST'])
 def criar_pedido():
 
     data = request.json
@@ -40,6 +39,15 @@ def criar_pedido():
     conn = conectar_bd()
     cursor = conn.cursor()
 
+    # 🔥 1. Fecha qualquer pedido aberto da mesa
+    cursor.execute("""
+        UPDATE Pedidos
+        SET status = 'fechado'
+        WHERE mesa_id = %s
+        AND status = 'aberto'
+    """, (mesa_id,))
+
+    # 🔥 2. Cria novo pedido
     cursor.execute("""
         INSERT INTO Pedidos (mesa_id, status)
         VALUES (%s, 'aberto')
@@ -64,7 +72,9 @@ def buscar_pedido_aberto(mesa_id):
 
     cursor.execute("""
         SELECT * FROM Pedidos
-        WHERE mesa_id = %s AND status = 'aberto'
+        WHERE mesa_id = %s
+        AND status = 'aberto'
+        ORDER BY id DESC
         LIMIT 1
     """, (mesa_id,))
 

@@ -224,24 +224,67 @@ function aparecerCarrinho(){
     }
 }
 
+// Menu sanduiche
+
+function toggleHistorico() {
+    document
+        .getElementById("historicoPedidos")
+        .classList.toggle("escondido");
+}
+
+function renderHistorico() {
+
+    const container = document.getElementById("historicoPedidos");
+
+    container.innerHTML = "";
+
+    itensEnviados.forEach(item => {
+
+        container.innerHTML += `
+            <div class="itensConteinerCarrinho item-historico">
+
+                <img src="imagens/${item.imagem_url}" alt="">
+
+                <div class="meioNome">
+
+                    <div class="linha1">
+                        <h3>${item.nome}</h3>
+
+                        <div class="quantidade">
+                            <span class="qtd">${item.quantidade}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <span class="preco">
+                    R$ ${Number(item.preco).toFixed(2)}
+                </span>
+
+            </div>
+        `;
+    });
+}
+
+
+
+
+
 function verPedido(){
     aparecerCarrinho()
 
     const conteinerCarrinho = document.querySelector(".conteinerCarrinho")
 
-
-
     conteinerCarrinho.innerHTML = ""; 
 
-
-
+    // 🟢 CARRINHO ATUAL
     carrinho.forEach(item => {
         conteinerCarrinho.innerHTML += `
             <div class="itensConteinerCarrinho">
                 <img src="imagens/${item.imagem_url}" alt="">
 
                 <div class="meioNome">
-    
+
                     <div class="linha1">
                         <h3>${item.nome}</h3>
 
@@ -259,24 +302,33 @@ function verPedido(){
 
                 </div>
 
-
                 <span class="preco">R$ ${Number(item.preco).toFixed(2)}</span>
             </div>
         `;
     });
 
-    const footterPrecoTotal = document.querySelector(".precoTotal");
+    // 🔵 HISTÓRICO (itens já enviados)
+    conteinerCarrinho.innerHTML += `
+        <div class="historico-container">
+            <div class="historico-header" onclick="toggleHistorico()">
+                ▼ Produtos já pedidos
+            </div>
+
+            <div id="historicoPedidos" class="historico-body escondido"></div>
+        </div>
+    `;
+
+    renderHistorico()
     
-    footterPrecoTotal.innerHTML = '';
 
-    let precoTotal = 0
-        
+    // 💰 TOTAL SOMENTE DO CARRINHO
+    const footterPrecoTotal = document.querySelector(".precoTotal");
+
+    let precoTotal = 0;
+
     carrinho.forEach(item => {
-        precoTotal += (
-            Number(item.preco) * item.quantidade
-        )
+        precoTotal += Number(item.preco) * item.quantidade;
     });
-
 
     footterPrecoTotal.innerHTML = `R$ ${precoTotal.toFixed(2)}`;
 }
@@ -362,6 +414,10 @@ function adicionarAoCarrinho(produto) {
     atualizarCarrinho();
     botaoVerItem()
 }
+
+
+
+
 
 document.querySelectorAll(".menu-lateral li").forEach(item => {
     item.addEventListener("click", () => {
