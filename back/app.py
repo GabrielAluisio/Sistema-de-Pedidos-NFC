@@ -31,6 +31,7 @@ def conectar_bd():
 
 #Função para criar a comanda
 @app.route('/pedido', methods=['POST'])
+@app.route('/pedido', methods=['POST'])
 def criar_pedido():
 
     data = request.json
@@ -39,31 +40,10 @@ def criar_pedido():
     conn = conectar_bd()
     cursor = conn.cursor()
 
-    # verifica se já existe pedido aberto
     cursor.execute("""
-        SELECT id FROM Pedidos
-        WHERE mesa_id = %s AND status = 'aberto'
-        LIMIT 1
+        INSERT INTO Pedidos (mesa_id, status)
+        VALUES (%s, 'aberto')
     """, (mesa_id,))
-
-    pedido_existente = cursor.fetchone()
-
-    if pedido_existente:
-
-        pedido_id = pedido_existente[0]
-
-        cursor.close()
-        conn.close()
-
-        return jsonify({
-            "pedido_id": pedido_id
-        })
-
-    # cria novo pedido
-    cursor.execute(
-        "INSERT INTO Pedidos (mesa_id, status) VALUES (%s, 'aberto')",
-        (mesa_id,)
-    )
 
     conn.commit()
 
@@ -75,7 +55,6 @@ def criar_pedido():
     return jsonify({
         "pedido_id": pedido_id
     })
-
 
 # Função para verificar se já existe a comanda 
 @app.route('/pedido/mesa/<int:mesa_id>', methods=['GET'])

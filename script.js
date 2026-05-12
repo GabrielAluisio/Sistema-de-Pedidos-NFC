@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let produtos = [];
 
+// Itens que o usuario clicar 
 let carrinho = [];
+
+// Itens no Banco de dados
+let itensEnviados = [];
 
 let pedido_id = null;
 
@@ -60,41 +64,45 @@ function entrarSistema() {
 
 async function novoPedido() {
 
-    if (pedido_id) {
-        entrarSistema();
-        return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(
+        window.location.search
+    );
 
     const mesaId = params.get("mesa");
 
+    console.log("Mesa:", mesaId);
+
     try {
 
-        const response = await fetch("http://localhost:5000/pedido", {
-            method: "POST",
+        const response = await fetch(
+            "http://localhost:5000/pedido",
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify({
-                mesa_id: mesaId
-            })
-        });
+                body: JSON.stringify({
+                    mesa_id: mesaId
+                })
+            }
+        );
 
         const data = await response.json();
 
         pedido_id = data.pedido_id;
 
-        console.log("Pedido criado:", pedido_id);
+        console.log("Pedido:", pedido_id);
 
         entrarSistema();
 
     } catch (erro) {
 
-        console.log("Erro ao criar pedido:", erro);
-
+        console.log(
+            "Erro ao criar pedido:",
+            erro
+        );
     }
 }
 
@@ -138,7 +146,7 @@ async function continuarPedido() {
 
     const itens = await response.json();
 
-    carrinho = itens.map(item => ({
+    itensEnviados = itens.map(item => ({
         id: item.id,
         nome: item.nome,
         quantidade: item.quantidade,
@@ -146,15 +154,17 @@ async function continuarPedido() {
         imagem_url: item.imagem_url
     }));
 
-    atualizarCarrinho();
-    verPedido();
+    console.log(itensEnviados);
+    console.log("pedido atual:", pedido_id);
+
+    entrarSistema();
 }
 
 
 
 
 
-async function cancelarPedido() {
+/*async function cancelarPedido() {
 
     const confirmar = await Swal.fire({
         title: "Deseja cancelar pedido?",
@@ -189,7 +199,7 @@ async function cancelarPedido() {
         telaInicial.classList.remove("escondido");
         botaoVerItem()
     }
-}
+}*/
 
 function botaoVerItem() {
     const botaoVer = document.querySelector(".botaoVer");
@@ -362,36 +372,10 @@ document.querySelectorAll(".menu-lateral li").forEach(item => {
     });
 });
 
-/// Adicionar os itens/produtos no bancos de dados
+
 async function finalizarPedido() {
 
     try {
-
-        const params = new URLSearchParams(
-            window.location.search
-        );
-
-        const mesaId = params.get("mesa");
-
-        // cria pedido
-        const response = await fetch(
-            "http://localhost:5000/pedido",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    mesa_id: mesaId
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        pedido_id = data.pedido_id;
 
         // envia itens
         for (const item of carrinho) {
