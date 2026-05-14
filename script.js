@@ -266,19 +266,29 @@ function renderHistorico() {
     });
 }
 
+function excluir(index) {
+
+    carrinho.splice(index, 1);
+
+    atualizarCarrinho();
+
+    botaoVerItem();
+
+    verCarrinho()
+
+
+}
 
 
 
-
-function verPedido(){
-    aparecerCarrinho()
+function verCarrinho(){
 
     const conteinerCarrinho = document.querySelector(".conteinerCarrinho")
 
     conteinerCarrinho.innerHTML = ""; 
 
     // 🟢 CARRINHO ATUAL
-    carrinho.forEach(item => {
+    carrinho.forEach((item, index) => {
         conteinerCarrinho.innerHTML += `
             <div class="itensConteinerCarrinho">
                 <img src="imagens/${item.imagem_url}" alt="">
@@ -296,8 +306,10 @@ function verPedido(){
                     </div>
 
                     <div class="linha2">
-                        <button class="detalhe">Detalhes</button>
-                        <button class="excluir">Excluir</button>
+                        
+                        <button class="excluir" onclick="excluir(${index})">
+                            Excluir
+                        </button>
                     </div>
 
                 </div>
@@ -314,7 +326,9 @@ function verPedido(){
                 ▼ Produtos já pedidos
             </div>
 
-            <div id="historicoPedidos" class="historico-body escondido"></div>
+            <div id="historicoPedidos" class="historico-body escondido">
+            
+            </div>
         </div>
     `;
 
@@ -331,6 +345,12 @@ function verPedido(){
     });
 
     footterPrecoTotal.innerHTML = `R$ ${precoTotal.toFixed(2)}`;
+}
+
+function verPedido(){
+    verCarrinho()
+
+    aparecerCarrinho()
 }
 
 function renderizarProdutos(categoria) {
