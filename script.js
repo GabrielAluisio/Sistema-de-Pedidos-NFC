@@ -279,6 +279,30 @@ function excluir(index) {
 
 }
 
+function aumentar(index) {
+
+    carrinho[index].quantidade++;
+
+    atualizarCarrinho();
+
+    verCarrinho();
+}
+
+function diminuir(index) {
+
+    if (carrinho[index].quantidade > 1) {
+
+        carrinho[index].quantidade--;
+
+    } else {
+
+        carrinho.splice(index, 1);
+    }
+
+    atualizarCarrinho();
+
+    verCarrinho();
+}
 
 
 function verCarrinho(){
@@ -299,9 +323,9 @@ function verCarrinho(){
                         <h3>${item.nome}</h3>
 
                         <div class="quantidade">
-                            <button class="diminuir" onclick="diminuir()">-</button>
+                            <button class="diminuir" onclick="diminuir(${index})">-</button>
                             <span class="qtd">${item.quantidade}</span>
-                            <button class="aumentar" onclick="aumentar()">+</button>
+                            <button class="aumentar" onclick="aumentar(${index})">+</button>
                         </div>
                     </div>
 
@@ -388,7 +412,6 @@ function renderizarProdutos(categoria) {
         });
     });
 }
-
 
 function atualizarCarrinho() {
     const container = document.querySelector(".card-carrinho");
@@ -492,7 +515,6 @@ function fecharMensagem() {
     const modal = document.querySelector(".pedidoEnviado");
 
     modal.classList.add("escondido");
-    location.reload();
 
     setTimeout(() => {
         location.reload();
