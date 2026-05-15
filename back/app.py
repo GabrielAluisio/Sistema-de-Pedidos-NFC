@@ -160,7 +160,6 @@ def listar_itens(pedido_id):
 
     cursor.execute("""
         SELECT 
-            ip.id,
             p.nome,
             p.imagem_url,
             ip.quantidade,

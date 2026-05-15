@@ -24,9 +24,8 @@ const categorias = {
     "burgers especiais": 3,
     "vegetariano": 4,
     "bebidas": 5,
-    "nossas pizzas": 6,
-    "pizzas doces": 7,
-    "sobremesas": 8
+    "pizzas": 6,
+    "sobremesas": 7
 };
 
 
@@ -147,7 +146,6 @@ async function continuarPedido() {
     const itens = await response.json();
 
     itensEnviados = itens.map(item => ({
-        id: item.id,
         nome: item.nome,
         quantidade: item.quantidade,
         preco: item.preco_unitario,
