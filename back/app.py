@@ -176,6 +176,62 @@ def listar_itens(pedido_id):
 
     return jsonify(itens), print(itens)
 
+@app.route("/cozinha")
+def cozinha():
+    conn = conectar_bd()
+
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            p.id AS pedido_id,
+            m.id AS mesa,
+            pr.nome AS produto,
+            ip.quantidade,
+            p.data_hora,
+            p.status
+
+        FROM pedidos p
+
+        JOIN mesas m
+            ON p.mesa_id = m.id
+
+        JOIN itens_pedido ip
+            ON ip.pedido_id = p.id
+
+        JOIN produtos pr
+            ON pr.id = ip.produto_id
+
+        WHERE p.status = 'aberto'
+
+        ORDER BY p.data_hora ASC
+    """)
+
+    pedidos = cursor.fetchall()
+
+    return jsonify(pedidos)
+
+@app.route("/pedido/<int:pedido_id>/status", methods=["PUT"])
+def atualizar_status(pedido_id):
+
+    data = request.get_json()
+
+    status = data["status"]
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE pedidos
+        SET status = %s
+        WHERE id = %s
+    """, (status, pedido_id))
+
+    conn.commit()
+
+    return jsonify({
+        "mensagem": "Status atualizado"
+    })
+
 if __name__ == '__main__':
     app.run(debug=False)
 
