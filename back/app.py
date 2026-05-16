@@ -243,6 +243,69 @@ def atualizar_status(pedido_id):
         "mensagem": "Status atualizado"
     })
 
+@app.route("/pedido/<int:pedido_id>")
+def buscar_comanda(pedido_id):
+
+    conn = conectar_bd()
+
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            p.id AS pedido_id,
+            m.id AS mesa,
+            DATE_FORMAT(p.data_hora, '%H:%i') AS data_hora,
+
+            pr.nome,
+            pr.preco,
+            pr.imagem_url,
+
+            ip.quantidade
+
+        FROM pedidos p
+
+        JOIN mesas m
+            ON m.id = p.mesa_id
+
+        JOIN itens_pedido ip
+            ON ip.pedido_id = p.id
+
+        JOIN produtos pr
+            ON pr.id = ip.produto_id
+
+        WHERE p.id = %s
+    """, (pedido_id,))
+
+    pedido = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(pedido)
+
+
+@app.route("/pedido/<int:pedido_id>/fechar", methods=["PUT"])
+def fechar_comanda(pedido_id):
+
+    conn = conectar_bd()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE pedidos
+        SET status = 'fechado'
+        WHERE id = %s
+    """, (pedido_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        "mensagem": "Comanda fechada"
+    })
+
 if __name__ == '__main__':
     app.run(debug=False)
 

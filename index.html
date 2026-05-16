@@ -105,7 +105,11 @@
                 </div>
 
                 <button class="pedidoCompleto" onclick="finalizarPedido()">
-                    Pedido completo
+                    Enviar para cozinha
+                </button>
+
+                <button class="botaocomanda" onclick="abrirComanda()">
+                    Ver comanda
                 </button>
 
                 <div class="acoes">
@@ -121,6 +125,51 @@
                 <p>Seu pedido foi enviado para a cozinha</p>
                 <button onclick="fecharMensagem()">OK</button>
             </div>
+        </div>
+        <div class="telaComanda escondido">
+
+            <header id="header_logo">
+                <div id="logo">
+                    <img src="imagens/ChatGPT Image 20 de abr. de 2026, 00_55_05.png" alt="logo">
+                </div>
+
+                <div id="nome_comidas" class="titulo-estilo">
+                    Sua Comanda
+                </div>
+            </header>
+
+            <section class="conteudoComanda">
+
+                <div class="infoComanda">
+                    <h2>Mesa <span class="numeroMesa">05</span></h2>
+                    <p class="dataComanda">16/05/2026 19:40</p>
+                </div>
+
+                <div class="itensComanda">
+                    <!-- JS -->
+                </div>
+
+            </section>
+
+            <footer class="footerComanda">
+
+                <div class="totalComanda">
+                    <span>Total</span>
+                    <strong class="valorTotalComanda">
+                        R$ 0,00
+                    </strong>
+                </div>
+
+                <button class="fecharComanda">
+                    Fechar comanda
+                </button>
+
+                <button class="voltarComanda">
+                    Voltar
+                </button>
+
+            </footer>
+
         </div>
     </div>
 </body>

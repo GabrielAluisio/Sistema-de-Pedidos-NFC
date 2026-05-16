@@ -520,42 +520,38 @@ function fecharMensagem() {
     }, 300); // tempo opcional
 }
 
-/// Cozinha 
 
-console.log("COZINHA ONLINE");
 
-const conteudoCozinha = document.querySelector(".conteudoCozinha");
 
-buscarPedidos();
+// Comanda 
 
-/* Atualiza automático */
-setInterval(() => {
-    buscarPedidos();
-}, 5000);
+const telaComanda = document.querySelector(".telaComanda");
+const itensComanda = document.querySelector(".itensComanda");
 
 
 
 /* =========================
-   BUSCAR PEDIDOS
+   ABRIR COMANDA
 ========================= */
-async function buscarPedidos() {
+
+async function abrirComanda() {
 
     try {
 
         const response = await fetch(
-            "http://localhost:5000/cozinha"
+            `http://localhost:5000/pedido/${pedido_id}`
         );
 
-        const pedidos = await response.json();
+        const dados = await response.json();
 
-        console.log(pedidos);
+        renderizarComanda(dados);
 
-        renderizarPedidos(pedidos);
+        telaComanda.classList.remove("escondido");
 
     } catch (erro) {
 
         console.log(
-            "Erro ao buscar pedidos:",
+            "Erro ao abrir comanda",
             erro
         );
     }
@@ -566,187 +562,119 @@ async function buscarPedidos() {
 /* =========================
    RENDERIZAR
 ========================= */
-function renderizarPedidos(pedidos) {
 
-    conteudoCozinha.innerHTML = "";
+function renderizarComanda(dados) {
 
-    if (pedidos.length === 0) {
+    itensComanda.innerHTML = "";
 
-        conteudoCozinha.innerHTML = `
-            <div class="semPedidos">
-                <h1>Nenhum pedido aberto</h1>
-                <p>A cozinha está vazia no momento</p>
-            </div>
-        `;
+    let total = 0;
 
-        return;
-    }
+    const mesa = dados[0].mesa;
 
-    /* Agrupar por pedido_id */
-    const pedidosAgrupados = {};
+    document.querySelector(".numeroMesa")
+        .innerHTML = String(mesa).padStart(2, "0");
 
-    pedidos.forEach(item => {
-
-        if (!pedidosAgrupados[item.pedido_id]) {
-
-            pedidosAgrupados[item.pedido_id] = {
-                mesa: item.mesa,
-                horario: formatarHorario(item.data_hora),
-                itens: []
-            };
-        }
-
-        pedidosAgrupados[item.pedido_id]
-            .itens
-            .push(item);
-    });
+    document.querySelector(".dataComanda")
+        .innerHTML = formatarData(dados[0].data_hora);
 
 
 
+    dados.forEach(item => {
 
-    /* Criar cards */
-    for (const pedidoId in pedidosAgrupados) {
+        const subtotal =
+            item.preco * item.quantidade;
 
-        const pedido = pedidosAgrupados[pedidoId];
+        total += subtotal;
 
-        let itensHTML = "";
+        itensComanda.innerHTML += `
+            <div class="itemComanda">
 
-        pedido.itens.forEach(item => {
+                <div class="ladoEsquerdo">
 
-            itensHTML += `
-                <p>
-                    ${item.quantidade}x ${item.produto}
-                </p>
-            `;
-        });
-
-
-
-
-        conteudoCozinha.innerHTML += `
-            <div class="cardCozinha">
-
-                <header>
+                    <img 
+                        src="imagens/${item.imagem_url}"
+                    >
 
                     <div>
-                        <p>Mesa</p>
-                        <p>${pedido.horario}</p>
+                        <h3>
+                            ${item.quantidade}x ${item.nome}
+                        </h3>
+
+                        <p>
+                            R$ ${subtotal.toFixed(2)}
+                        </p>
                     </div>
-
-                    <h1>
-                        ${String(pedido.mesa).padStart(2, "0")}
-                    </h1>
-
-                </header>
-
-
-                <article>
-                    ${itensHTML}
-                </article>
-
-
-                <div class="acoesCozinha">
-
-                    <button 
-                        class="botaoCardCozinha botaoCancelarCozinha"
-                        onclick="cancelarPedido(${pedidoId})"
-                    >
-                        Cancelar
-                    </button>
-
-                    <button 
-                        class="botaoCardCozinha botaoPronto"
-                        onclick="pedidoPronto(${pedidoId})"
-                    >
-                        Pronto
-                    </button>
 
                 </div>
 
             </div>
         `;
-    }
+    });
+
+
+
+    document.querySelector(
+        ".valorTotalComanda"
+    ).innerHTML =
+        `R$ ${total.toFixed(2)}`;
 }
 
 
 
-
 /* =========================
-   PEDIDO PRONTO
+   FECHAR COMANDA
 ========================= */
-async function pedidoPronto(pedido_id) {
+
+document.querySelector(".fecharComanda")
+.addEventListener("click", async () => {
 
     try {
 
         await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/status`,
+            `http://localhost:5000/pedido/${pedido_id}/fechar`,
             {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    status: "pronto"
-                })
+                method: "PUT"
             }
         );
 
-        buscarPedidos();
+        alert("Comanda fechada!");
+
+        telaComanda.classList.add("escondido");
+
+        location.reload();
 
     } catch (erro) {
 
         console.log(
-            "Erro ao atualizar pedido:",
+            "Erro ao fechar comanda",
             erro
         );
     }
-}
+});
 
+
+/* =========================
+   VOLTAR
+========================= */
+
+document.querySelector(".voltarComanda")
+.addEventListener("click", () => {
+
+    telaComanda.classList.add("escondido");
+
+});
 
 
 
 /* =========================
-   CANCELAR PEDIDO
+   FORMATAR DATA
 ========================= */
-async function cancelarPedido(pedido_id) {
 
-    try {
+function formatarData(data) {
 
-        await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/status`,
-            {
-                method: "PUT",
+    const horario = new Date(data);
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    status: "cancelado"
-                })
-            }
-        );
-
-        buscarPedidos();
-
-    } catch (erro) {
-
-        console.log(
-            "Erro ao cancelar pedido:",
-            erro
-        );
-    }
-}
-
-
-
-
-/* =========================
-   FORMATAR HORA
-========================= */
-function formatarHorario(data) {
-
-    return data;
+    return horario.toLocaleString(
+        "pt-BR"
+    );
 }
