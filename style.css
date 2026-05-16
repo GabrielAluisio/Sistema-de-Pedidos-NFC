@@ -35,9 +35,13 @@ body, html {
 
 body {
     margin: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+}
+
+body.sistema{
+    overflow: hidden;
 }
 
 .titulo-estilo {
@@ -736,10 +740,12 @@ body {
     grid-template-rows: 100px 1fr;
 
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+
     background-color: rgba(0, 0, 0, 0.993);
 }
 
+/* CONTEÚDO */
 .conteudoCozinha{
     grid-area: 2 / 1 / 3 / 2;
 
@@ -754,8 +760,9 @@ body {
     height: 100%;
 }
 
+/* CARD */
 .cardCozinha{
-    width: 340px;
+    width: 330px;
     min-height: 430px;
 
     background: linear-gradient(180deg, #1a1a1a, #111);
@@ -768,11 +775,10 @@ body {
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 
     box-shadow: 0 8px 25px rgba(0,0,0,0.35);
 
-    flex: 0 0 auto;
+    flex-shrink: 0;
 }
 
 /* HEADER */
@@ -786,28 +792,19 @@ body {
     border-bottom: 2px solid rgba(255, 166, 0, 0.7);
 }
 
-/* PRIMEIRA LINHA */
-.cardCozinha header p{
-    display: inline-block;
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffb300;
-}
-
-/* deixa hora na direita */
-.cardCozinha header p:last-child{
-    float: right;
-    color: #ffd369;
-}
 .cardCozinha header div {
     display: flex;
     justify-content: space-between;
 }
 
-/* NÚMERO DA MESA */
+.cardCozinha header p{
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffb300;
+}
+
 .cardCozinha header h1{
     font-size: 70px;
-    line-height: 1;
 
     margin-top: 10px;
 
@@ -826,26 +823,45 @@ body {
     font-size: 15px;
     font-weight: 600;
 
-    flex: 1;
-
     color: #f5f5f5;
+
+    min-height: 180px;
+    max-height: 180px;
+    overflow-y: auto;
+
+    padding-right: 5px;
+
 }
 
-/* BOTÃO */
-.botaoCardCozinha{
-    width: 100%;
-    height: 60px;
+.cardCozinha article::-webkit-scrollbar{
+    width: 6px;
+}
 
-    margin-top: 25px;
+.cardCozinha article::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+}
+
+/* ÁREA DOS BOTÕES */
+.acoesCozinha{
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+/* BOTÕES */
+.botaoCardCozinha{
+    width: 130px;
+    height: 50px;
 
     border: none;
-    border-radius: 12px;
-
-    background: linear-gradient(90deg, #ff9800, #ffb300);
+    border-radius: 10px;
 
     color: white;
 
-    font-size: 22px;
+    font-size: 15px;
     font-weight: bold;
 
     cursor: pointer;
@@ -853,11 +869,63 @@ body {
     transition: 0.2s;
 }
 
+/* CANCELAR */
+.botaoCancelarCozinha{
+    background: #8b0000;
+}
+
+/* PRONTO */
+.botaoPronto{
+    background: linear-gradient(90deg, #ff9800, #ffb300);
+}
+
 .botaoCardCozinha:hover{
-    transform: scale(1.02);
-    filter: brightness(1.05);
+    transform: scale(1.03);
 }
 
 .botaoCardCozinha:active{
-    transform: scale(0.98);
+    transform: scale(0.97);
+}
+
+/* SCROLL BONITO */
+.conteudoCozinha::-webkit-scrollbar{
+    width: 10px;
+}
+
+.conteudoCozinha::-webkit-scrollbar-track{
+    background: #111;
+}
+
+.conteudoCozinha::-webkit-scrollbar-thumb{
+    background: #444;
+    border-radius: 10px;
+}
+
+.conteudoCozinha::-webkit-scrollbar-thumb:hover{
+    background: #666;
+}
+
+.semPedidos{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+
+    text-align: center;
+}
+
+.semPedidos h1{
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.semPedidos p{
+    font-size: 18px;
+    opacity: 0.7;
 }

@@ -188,7 +188,9 @@ def cozinha():
             m.id AS mesa,
             pr.nome AS produto,
             ip.quantidade,
-            p.data_hora,
+
+            DATE_FORMAT(p.data_hora, '%H:%i') AS data_hora,
+
             p.status
 
         FROM pedidos p
@@ -209,16 +211,22 @@ def cozinha():
 
     pedidos = cursor.fetchall()
 
-    return jsonify(pedidos)
+    return jsonify(pedidos), print(pedidos)
 
+
+
+
+#O js vai mandar o status do pedido
 @app.route("/pedido/<int:pedido_id>/status", methods=["PUT"])
 def atualizar_status(pedido_id):
+
+    conn = conectar_bd()
+
+    cursor = conn.cursor()
 
     data = request.get_json()
 
     status = data["status"]
-
-    cursor = conn.cursor()
 
     cursor.execute("""
         UPDATE pedidos
@@ -227,6 +235,9 @@ def atualizar_status(pedido_id):
     """, (status, pedido_id))
 
     conn.commit()
+
+    cursor.close()
+    conn.close()
 
     return jsonify({
         "mensagem": "Status atualizado"
