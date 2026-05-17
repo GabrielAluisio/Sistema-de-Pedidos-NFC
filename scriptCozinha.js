@@ -1,4 +1,8 @@
+const API_URL = "https://SEU-APP.onrender.com";
+
 /// Cozinha
+
+
 
 console.log("COZINHA ONLINE");
 
@@ -24,7 +28,7 @@ async function buscarPedidos() {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/cozinha"
+            `${API_URL}/cozinha`
         );
 
         const pedidos = await response.json();
@@ -176,7 +180,7 @@ async function itemPronto(item_id) {
     try {
 
         await fetch(
-            `http://localhost:5000/item/${item_id}/pronto`,
+            `${API_URL}/item/${item_id}/pronto`,
             {
                 method: "PUT"
             }
@@ -224,7 +228,7 @@ async function cancelarItem(item_id) {
     try {
 
         await fetch(
-            `http://localhost:5000/item/${item_id}/cancelar`,
+            `${API_URL}/item/${item_id}/cancelar`,
             {
                 method: "PUT"
             }

@@ -1,4 +1,6 @@
 /*Tela de carregamento */
+const API_URL = "https://SEU-APP.onrender.com";
+
 
 const loading = document.getElementById("loading");
 
@@ -56,7 +58,7 @@ const categorias = {
 async function buscarProdutos() {
 
     const response = await fetch(
-        "http://localhost:5000/produtos"
+        `${API_URL}/produtos`
     );
 
     produtos = await response.json();
@@ -95,7 +97,7 @@ async function novoPedido() {
 
         // 🔥 verifica se já existe pedido aberto
         const responseCheck = await fetch(
-            `http://localhost:5000/pedido/mesa/${mesaId}`
+            `${API_URL}/pedido/mesa/${mesaId}`
         );
 
         const pedidoExistente = await responseCheck.json();
@@ -125,7 +127,7 @@ async function novoPedido() {
 
         // 🔥 cria novo pedido (ou substitui)
         const response = await fetch(
-            "http://localhost:5000/pedido",
+            `${API_URL}/pedido`,
             {
                 method: "POST",
                 headers: {
@@ -162,7 +164,7 @@ async function verificarPedidoExistente() {
     const mesaId = params.get("mesa");
 
     const response = await fetch(
-        `http://localhost:5000/pedido/mesa/${mesaId}`
+        `${API_URL}/pedido/mesa/${mesaId}`
     );
 
     const data = await response.json();
@@ -186,7 +188,7 @@ async function verificarPedidoExistente() {
 async function continuarPedido() {
 
     const response = await fetch(
-        `http://localhost:5000/pedido/${pedido_id}/itens`
+        `${API_URL}/pedido/${pedido_id}/itens`
     );
 
     const itens = await response.json();
@@ -242,7 +244,7 @@ async function cancelarPedido() {
     try {
 
         await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/status`,
+            `${API_URL}/pedido/${pedido_id}/status`,
             {
                 method: "PUT",
                 headers: {
@@ -629,7 +631,7 @@ async function finalizarPedido() {
         const requests = carrinho.map(item => {
 
             return fetch(
-                `http://localhost:5000/pedido/${pedido_id}/item`,
+                `${API_URL}/pedido/${pedido_id}/item`,
                 {
                     method: "POST",
                     headers: {
@@ -732,7 +734,7 @@ async function abrirComanda() {
     try {
 
         const response = await fetch(
-            `http://localhost:5000/pedido/${pedido_id}`
+            `${API_URL}/pedido/${pedido_id}`
         );
 
         const dados = await response.json();
@@ -849,7 +851,7 @@ document.querySelector(".fecharComanda")
     try {
 
         await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/fechar`,
+            `${API_URL}/pedido/${pedido_id}/fechar`,
             {
                 method: "PUT"
             }
