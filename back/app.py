@@ -243,23 +243,31 @@ def item_pronto(item_id):
     })
 
 
-#O js vai mandar o status do pedido
+# O JS vai mandar o status do pedido
 @app.route("/pedido/<int:pedido_id>/status", methods=["PUT"])
 def atualizar_status(pedido_id):
 
     conn = conectar_bd()
-
     cursor = conn.cursor()
 
     data = request.get_json()
-
     status = data["status"]
 
+    # Atualiza pedido
     cursor.execute("""
         UPDATE pedidos
         SET status = %s
         WHERE id = %s
     """, (status, pedido_id))
+
+    # Se cancelar -> cancela itens também
+    if status == "cancelado":
+
+        cursor.execute("""
+            UPDATE itens_pedido
+            SET status = 'cancelado'
+            WHERE pedido_id = %s
+        """, (pedido_id,))
 
     conn.commit()
 
