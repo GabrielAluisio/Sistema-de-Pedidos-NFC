@@ -1,10 +1,32 @@
+/*Tela de carregamento */
+
+const loading = document.getElementById("loading");
+
+function mostrarLoading() {
+    loading.classList.remove("escondido");
+}
+
+function esconderLoading() {
+    loading.classList.add("escondido");
+}
+
 console.log("SCRIPT CARREGADO");
 
-document.addEventListener("DOMContentLoaded", () => {
-    verificarPedidoExistente();
-    buscarProdutos();
+document.addEventListener("DOMContentLoaded", async () => {
 
-    atualizarBotaoComanda();
+    mostrarLoading();
+
+    try {
+        await verificarPedidoExistente();
+        await buscarProdutos();
+        atualizarBotaoComanda();
+
+    } catch (erro) {
+        console.log("Erro ao carregar dados:", erro);
+
+    } finally {
+        esconderLoading();
+    }
 });
 
 /// Variaveis 
@@ -64,6 +86,8 @@ function entrarSistema() {
 
 async function novoPedido() {
 
+    mostrarLoading();
+
     const params = new URLSearchParams(window.location.search);
     const mesaId = params.get("mesa");
 
@@ -122,6 +146,8 @@ async function novoPedido() {
     } catch (erro) {
 
         console.log("Erro ao criar pedido:", erro);
+    }finally {
+        esconderLoading();
     }
 }
 
@@ -203,6 +229,16 @@ async function cancelarPedido() {
 
     if (!confirmar.isConfirmed) return;
 
+    // 🔥 loading dentro do Swal
+    Swal.fire({
+        title: "Cancelando pedido...",
+        text: "Aguarde um momento",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     try {
 
         await fetch(
@@ -218,7 +254,7 @@ async function cancelarPedido() {
             }
         );
 
-        // 🔥 limpa estado do front
+        // 🔥 limpa estado
         carrinho = [];
         itensEnviados = [];
         pedido_id = null;
@@ -227,11 +263,11 @@ async function cancelarPedido() {
         atualizarBotaoComanda();
         verificarPedidoExistente();
 
-        // volta pra tela inicial
+        // volta tela
         document.querySelector(".app").classList.add("escondido");
         document.querySelector(".telaInicial").classList.remove("escondido");
 
-        Swal.fire({
+        await Swal.fire({
             title: "Pedido cancelado!",
             icon: "success",
             timer: 1500,
@@ -241,6 +277,11 @@ async function cancelarPedido() {
     } catch (erro) {
 
         console.log("Erro ao cancelar pedido:", erro);
+
+        Swal.fire({
+            title: "Erro ao cancelar",
+            icon: "error"
+        });
     }
 }
 
@@ -573,40 +614,61 @@ document.querySelectorAll(".menu-lateral li").forEach(item => {
 
 async function finalizarPedido() {
 
+    Swal.fire({
+        title: "Enviando pedido...",
+        text: "Aguarde um momento",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     try {
 
-        // envia itens
-        for (const item of carrinho) {
+        // 🔥 ENVIO MAIS RÁPIDO (paralelo)
+        const requests = carrinho.map(item => {
 
-            await fetch(
+            return fetch(
                 `http://localhost:5000/pedido/${pedido_id}/item`,
                 {
                     method: "POST",
-
                     headers: {
                         "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify({
                         produto_id: item.id,
                         quantidade: item.quantidade
                     })
                 }
             );
-        }
+        });
 
-        // mostra mensagem
-        const modal =
-            document.querySelector(".pedidoEnviado");
+        await Promise.all(requests);
 
-        modal.classList.remove("escondido");
+        // limpa carrinho
+        carrinho = [];
+        atualizarCarrinho();
+
+        // fecha loading e mostra sucesso
+        await Swal.fire({
+            title: "Pedido enviado!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // mostra modal seu (se quiser manter)
+        document.querySelector(".pedidoEnviado")
+            .classList.remove("escondido");
 
     } catch (erro) {
 
-        console.log(
-            "Erro ao finalizar pedido:",
-            erro
-        );
+        console.log("Erro ao finalizar pedido:", erro);
+
+        Swal.fire({
+            title: "Erro ao enviar pedido",
+            icon: "error"
+        });
     }
 }
 
@@ -658,6 +720,15 @@ function atualizarBotaoComanda() {
 
 async function abrirComanda() {
 
+    Swal.fire({
+        title: "Carregando comanda...",
+        text: "Aguarde um momento",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     try {
 
         const response = await fetch(
@@ -670,12 +741,16 @@ async function abrirComanda() {
 
         telaComanda.classList.remove("escondido");
 
+        Swal.close(); // 🔥 fecha loading
+
     } catch (erro) {
 
-        console.log(
-            "Erro ao abrir comanda",
-            erro
-        );
+        console.log("Erro ao abrir comanda", erro);
+
+        Swal.fire({
+            title: "Erro ao carregar comanda",
+            icon: "error"
+        });
     }
 }
 
