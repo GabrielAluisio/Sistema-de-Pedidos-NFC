@@ -290,6 +290,138 @@ def atualizar_status(pedido_id):
         cursor.close()
         conn.close()
 
+# =========================
+# LISTAR ITENS DO PEDIDO
+# =========================
+@app.route('/pedido/<int:pedido_id>/itens', methods=['GET'])
+def listar_itens(pedido_id):
+
+    conn = conectar_bd()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                p.nome,
+                p.imagem_url,
+                ip.quantidade,
+                ip.preco_unitario,
+                ip.status
+            FROM itens_pedido ip
+            JOIN produtos p
+                ON ip.produto_id = p.id
+            WHERE ip.pedido_id = %s
+            AND ip.status IN ('pendente', 'pronto')
+        """, (pedido_id,))
+
+        itens = cursor.fetchall()
+
+        return jsonify(itens)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# =========================
+# BUSCAR COMANDA
+# =========================
+@app.route("/pedido/<int:pedido_id>")
+def buscar_comanda(pedido_id):
+
+    conn = conectar_bd()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT
+                p.id AS pedido_id,
+                m.id AS mesa,
+                DATE_FORMAT(p.data_hora, '%H:%i') AS data_hora,
+
+                pr.nome,
+                pr.preco,
+                pr.imagem_url,
+
+                ip.quantidade,
+                ip.status
+
+            FROM pedidos p
+
+            JOIN mesas m
+                ON m.id = p.mesa_id
+
+            JOIN itens_pedido ip
+                ON ip.pedido_id = p.id
+
+            JOIN produtos pr
+                ON pr.id = ip.produto_id
+
+            WHERE p.id = %s
+            AND ip.status != 'cancelado'
+        """, (pedido_id,))
+
+        pedido = cursor.fetchall()
+
+        return jsonify(pedido)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# =========================
+# FECHAR COMANDA
+# =========================
+@app.route("/pedido/<int:pedido_id>/fechar", methods=["PUT"])
+def fechar_comanda(pedido_id):
+
+    conn = conectar_bd()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE pedidos
+            SET status = 'fechado'
+            WHERE id = %s
+        """, (pedido_id,))
+
+        conn.commit()
+
+        return jsonify({
+            "mensagem": "Comanda fechada"
+        })
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# =========================
+# CANCELAR ITEM
+# =========================
+@app.route("/item/<int:item_id>/cancelar", methods=["PUT"])
+def cancelar_item(item_id):
+
+    conn = conectar_bd()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE itens_pedido
+            SET status = 'cancelado'
+            WHERE id = %s
+        """, (item_id,))
+
+        conn.commit()
+
+        return jsonify({
+            "mensagem": "Item cancelado"
+        })
+
+    finally:
+        cursor.close()
+        conn.close()
 
 # =========================
 # RUN (Render usa gunicorn)
