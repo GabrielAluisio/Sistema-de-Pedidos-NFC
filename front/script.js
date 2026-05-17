@@ -104,6 +104,7 @@ async function novoPedido() {
 
         // 🔴 SE EXISTE PEDIDO ABERTO
         if (pedidoExistente.id) {
+            esconderLoading();
 
             const confirmar = await Swal.fire({
                 title: "Já existe um pedido aberto",
@@ -122,8 +123,14 @@ async function novoPedido() {
             });
 
             // ❌ cancelou → não faz nada
-            if (!confirmar.isConfirmed) return;
+            if (!confirmar.isConfirmed) {
+                esconderLoading();
+                return ;
+            }
+            
         }
+
+        mostrarLoading();
 
         // 🔥 cria novo pedido (ou substitui)
         const response = await fetch(
