@@ -196,43 +196,30 @@ async function itemPronto(item_id) {
 
 
 
-/* =========================
-   CANCELAR PEDIDO
-========================= */
-async function cancelarPedido(pedido_id) {
-
-    try {
-
-        await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/status`,
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    status: "cancelado"
-                })
-            }
-        );
-
-        buscarPedidos();
-
-    } catch (erro) {
-
-        console.log(
-            "Erro ao cancelar pedido:",
-            erro
-        );
-    }
-}
 
 /* =========================
    CANCELAR ITEM
 ========================= */
 async function cancelarItem(item_id) {
+
+    const confirmar = await Swal.fire({
+        title: "Cancelar item?",
+        text: "Tem certeza que deseja cancelar este item?",
+        icon: "warning",
+
+        showCancelButton: true,
+        confirmButtonText: "Sim, cancelar",
+        cancelButtonText: "Não",
+
+        iconColor: "#ffffff",
+        confirmButtonColor: "#8b0000",
+        cancelButtonColor: "#194e00",
+        background: "#000000d0",
+        color: "#fff"
+    });
+
+    // se cancelar, sai da função
+    if (!confirmar.isConfirmed) return;
 
     try {
 
@@ -247,10 +234,7 @@ async function cancelarItem(item_id) {
 
     } catch (erro) {
 
-        console.log(
-            "Erro ao cancelar item:",
-            erro
-        );
+        console.log("Erro ao cancelar item:", erro);
     }
 }
 

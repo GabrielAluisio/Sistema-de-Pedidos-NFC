@@ -64,25 +64,49 @@ function entrarSistema() {
 
 async function novoPedido() {
 
-    const params = new URLSearchParams(
-        window.location.search
-    );
-
+    const params = new URLSearchParams(window.location.search);
     const mesaId = params.get("mesa");
-
-    console.log("Mesa:", mesaId);
 
     try {
 
+        // 🔥 verifica se já existe pedido aberto
+        const responseCheck = await fetch(
+            `http://localhost:5000/pedido/mesa/${mesaId}`
+        );
+
+        const pedidoExistente = await responseCheck.json();
+
+        // 🔴 SE EXISTE PEDIDO ABERTO
+        if (pedidoExistente.id) {
+
+            const confirmar = await Swal.fire({
+                title: "Já existe um pedido aberto",
+                text: "Se continuar, o pedido atual será finalizado e substituído. Deseja continuar?",
+                icon: "warning",
+
+                showCancelButton: true,
+                confirmButtonText: "Sim, continuar",
+                cancelButtonText: "Cancelar",
+
+                iconColor: "#ffffff",
+                confirmButtonColor: "#8b0000",
+                cancelButtonColor: "#194e00",
+                background: "#000000d0",
+                color: "#fff"
+            });
+
+            // ❌ cancelou → não faz nada
+            if (!confirmar.isConfirmed) return;
+        }
+
+        // 🔥 cria novo pedido (ou substitui)
         const response = await fetch(
             "http://localhost:5000/pedido",
             {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
                     mesa_id: mesaId
                 })
@@ -93,16 +117,11 @@ async function novoPedido() {
 
         pedido_id = data.pedido_id;
 
-        console.log("Pedido:", pedido_id);
-
         entrarSistema();
 
     } catch (erro) {
 
-        console.log(
-            "Erro ao criar pedido:",
-            erro
-        );
+        console.log("Erro ao criar pedido:", erro);
     }
 }
 
@@ -727,9 +746,30 @@ function renderizarComanda(dados) {
 /* =========================
    FECHAR COMANDA
 ========================= */
-
 document.querySelector(".fecharComanda")
-.addEventListener("click", async () => {
+.addEventListener("click", async (e) => {
+
+    // 🔥 FORÇA tirar foco do botão
+    e.currentTarget.blur();
+    document.activeElement?.blur();
+
+    const confirmar = await Swal.fire({
+        title: "Fechar comanda?",
+        text: "Tem certeza que deseja encerrar essa comanda?",
+        icon: "warning",
+
+        showCancelButton: true,
+        confirmButtonText: "Sim, fechar",
+        cancelButtonText: "Não",
+
+        iconColor: "#ffffff",
+        confirmButtonColor: "#1f8f3a",
+        cancelButtonColor: "#8b0000",
+        background: "#000000d0",
+        color: "#fff"
+    });
+
+    if (!confirmar.isConfirmed) return;
 
     try {
 
@@ -740,18 +780,21 @@ document.querySelector(".fecharComanda")
             }
         );
 
-        alert("Comanda fechada!");
+        await Swal.fire({
+            title: "Comanda fechada!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+        });
 
+        // 🔥 IMPORTANTE: só depois de tudo
         telaComanda.classList.add("escondido");
 
         location.reload();
 
     } catch (erro) {
 
-        console.log(
-            "Erro ao fechar comanda",
-            erro
-        );
+        console.log("Erro ao fechar comanda", erro);
     }
 });
 
