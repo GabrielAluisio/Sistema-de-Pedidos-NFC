@@ -194,24 +194,39 @@ async function verificarPedidoExistente() {
 
 async function continuarPedido() {
 
-    const response = await fetch(
-        `${API_URL}/pedido/${pedido_id}/itens`
-    );
+    mostrarLoading();
 
-    const itens = await response.json();
+    try {
 
-    itensEnviados = itens.map(item => ({
-        nome: item.nome,
-        quantidade: item.quantidade,
-        preco: item.preco_unitario,
-        imagem_url: item.imagem_url
-    }));
+        const response = await fetch(
+            `${API_URL}/pedido/${pedido_id}/itens`
+        );
 
+        const itens = await response.json();
 
-    atualizarBotaoComanda();
+        itensEnviados = itens.map(item => ({
+            nome: item.nome,
+            quantidade: item.quantidade,
+            preco: item.preco_unitario,
+            imagem_url: item.imagem_url
+        }));
 
-    entrarSistema();
+        atualizarBotaoComanda();
 
+        entrarSistema();
+
+    } catch (erro) {
+
+        console.log(
+            "Erro ao continuar pedido:",
+            erro
+        );
+
+    } finally {
+
+        esconderLoading();
+
+    }
 }
 
 
