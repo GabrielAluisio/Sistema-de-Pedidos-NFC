@@ -320,7 +320,7 @@ function renderHistorico() {
         container.innerHTML += `
             <div class="itensConteinerCarrinho item-historico">
 
-                <img src="../imagens/${item.imagem_url}" alt="">
+                <img src="imagens/${item.imagem_url}" alt="">
 
                 <div class="meioNome">
 
@@ -427,7 +427,7 @@ function verCarrinho(){
     carrinho.forEach((item, index) => {
         conteinerCarrinho.innerHTML += `
             <div class="itensConteinerCarrinho">
-                <img src="..imagens/${item.imagem_url}" alt="">
+                <img src="imagens/${item.imagem_url}" alt="">
 
                 <div class="meioNome">
 
@@ -533,7 +533,7 @@ function renderizarProdutos(categoria) {
 
         container.innerHTML += `
             <div class="card" data-index="${index}">
-                <img src="../imagens/${produto.imagem_url}" alt="">
+                <img src="imagens/${produto.imagem_url}" alt="">
 
                 <div class="info">
                     <h3>${produto.nome}</h3>
@@ -791,7 +791,7 @@ function renderizarComanda(dados) {
                 <div class="ladoEsquerdo">
 
                     <img 
-                        src="../imagens/${item.imagem_url}"
+                        src="imagens/${item.imagem_url}"
                     >
 
                     <div>

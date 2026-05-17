@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector import pooling
 
 #biblioteca API
 from flask import Flask, request, jsonify
@@ -34,13 +35,21 @@ def cozinha_page():
 
 
 #Criar função para conectar com o bd
+dbconfig = {
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASS"),
+    "database": os.getenv("DB_NAME")
+}
+
+pool = pooling.MySQLConnectionPool(
+    pool_name="mypool",
+    pool_size=5,
+    **dbconfig
+)
+
 def conectar_bd():
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
-    )
+    return pool.get_connection()
 
 
 #Função para criar a comanda
