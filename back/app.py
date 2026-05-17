@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -38,6 +38,9 @@ def home():
 def cozinha_page():
     return render_template('cozinha.html')
 
+@app.route('/imagens/<path:nome_arquivo>')
+def servir_imagem(nome_arquivo):
+    return send_from_directory('../front/imagens', nome_arquivo)
 
 # =========================
 # PEDIDO
@@ -52,13 +55,13 @@ def criar_pedido():
         mesa_id = data.get('mesa_id')
 
         cursor.execute("""
-            UPDATE Pedidos
+            UPDATE pedidos
             SET status = 'fechado'
             WHERE mesa_id = %s AND status = 'aberto'
         """, (mesa_id,))
 
         cursor.execute("""
-            INSERT INTO Pedidos (mesa_id, status)
+            INSERT INTO pedidos (mesa_id, status)
             VALUES (%s, 'aberto')
         """, (mesa_id,))
 
@@ -81,7 +84,7 @@ def buscar_pedido_aberto(mesa_id):
 
     try:
         cursor.execute("""
-            SELECT * FROM Pedidos
+            SELECT * FROM pedidos
             WHERE mesa_id = %s
             AND status IN ('aberto', 'pronto')
             ORDER BY id DESC
@@ -106,7 +109,7 @@ def listar_produtos():
     cursor = conn.cursor(dictionary=True)
 
     try:
-        cursor.execute("SELECT * FROM Produtos")
+        cursor.execute("SELECT * FROM produtos")
         return jsonify(cursor.fetchall())
 
     finally:
@@ -127,7 +130,7 @@ def adicionar_item(pedido_id):
         produto_id = data.get('produto_id')
         quantidade = data.get('quantidade', 1)
 
-        cursor.execute("SELECT preco FROM Produtos WHERE id = %s", (produto_id,))
+        cursor.execute("SELECT preco FROM produtos WHERE id = %s", (produto_id,))
         produto = cursor.fetchone()
 
         if not produto:
@@ -136,7 +139,7 @@ def adicionar_item(pedido_id):
         preco = produto['preco']
 
         cursor.execute("""
-            SELECT * FROM Itens_pedido
+            SELECT * FROM itens_pedido
             WHERE pedido_id = %s AND produto_id = %s
         """, (pedido_id, produto_id))
 
@@ -144,13 +147,13 @@ def adicionar_item(pedido_id):
 
         if item:
             cursor.execute("""
-                UPDATE Itens_pedido
+                UPDATE itens_pedido
                 SET quantidade = quantidade + %s
                 WHERE id = %s
             """, (quantidade, item['id']))
         else:
             cursor.execute("""
-                INSERT INTO Itens_pedido
+                INSERT INTO itens_pedido
                 (pedido_id, produto_id, quantidade, preco_unitario)
                 VALUES (%s, %s, %s, %s)
             """, (pedido_id, produto_id, quantidade, preco))
