@@ -878,8 +878,7 @@ body.sistema{
 
 /* BOTÕES */
 .botaoCardCozinha{
-    width: 130px;
-    height: 50px;
+    
 
     border: none;
     border-radius: 10px;
@@ -894,13 +893,23 @@ body.sistema{
     transition: 0.2s;
 }
 
+.itemCozinha{
+    display: flex;
+    justify-content: space-between;
+}
+
 /* CANCELAR */
 .botaoCancelarCozinha{
     background: #8b0000;
+    width: 250px;
+    height: 40px;
 }
 
 /* PRONTO */
 .botaoPronto{
+    width: 80px;
+    height: 30px;
+    min-width: 80px;
     background: linear-gradient(90deg, #ff9800, #ffb300);
 }
 

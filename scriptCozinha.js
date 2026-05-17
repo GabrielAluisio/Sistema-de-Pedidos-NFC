@@ -1,8 +1,10 @@
-/// Cozinha 
+/// Cozinha
 
 console.log("COZINHA ONLINE");
 
-const conteudoCozinha = document.querySelector(".conteudoCozinha");
+const conteudoCozinha = document.querySelector(
+    ".conteudoCozinha"
+);
 
 buscarPedidos();
 
@@ -10,6 +12,7 @@ buscarPedidos();
 setInterval(() => {
     buscarPedidos();
 }, 5000);
+
 
 
 
@@ -41,6 +44,7 @@ async function buscarPedidos() {
 
 
 
+
 /* =========================
    RENDERIZAR
 ========================= */
@@ -48,6 +52,9 @@ function renderizarPedidos(pedidos) {
 
     conteudoCozinha.innerHTML = "";
 
+
+
+    /* Sem pedidos */
     if (pedidos.length === 0) {
 
         conteudoCozinha.innerHTML = `
@@ -60,7 +67,9 @@ function renderizarPedidos(pedidos) {
         return;
     }
 
-    /* Agrupar por pedido_id */
+
+
+    /* Agrupar por pedido */
     const pedidosAgrupados = {};
 
     pedidos.forEach(item => {
@@ -69,7 +78,7 @@ function renderizarPedidos(pedidos) {
 
             pedidosAgrupados[item.pedido_id] = {
                 mesa: item.mesa,
-                horario: formatarHorario(item.data_hora),
+                horario: formatarHorario(item.horario),
                 itens: []
             };
         }
@@ -89,18 +98,33 @@ function renderizarPedidos(pedidos) {
 
         let itensHTML = "";
 
+
+
+        /* Itens */
         pedido.itens.forEach(item => {
 
             itensHTML += `
-                <p>
-                    ${item.quantidade}x ${item.produto}
-                </p>
+                <div class="itemCozinha">
+
+                    <p>
+                        ${item.quantidade}x ${item.produto}
+                    </p>
+
+                    <button 
+                        class="botaoCardCozinha botaoPronto"
+                        onclick="itemPronto(${item.item_id})"
+                    >
+                        Pronto
+                    </button>
+
+                </div>
             `;
         });
 
 
 
 
+        /* Card */
         conteudoCozinha.innerHTML += `
             <div class="cardCozinha">
 
@@ -129,14 +153,7 @@ function renderizarPedidos(pedidos) {
                         class="botaoCardCozinha botaoCancelarCozinha"
                         onclick="cancelarPedido(${pedidoId})"
                     >
-                        Cancelar
-                    </button>
-
-                    <button 
-                        class="botaoCardCozinha botaoPronto"
-                        onclick="pedidoPronto(${pedidoId})"
-                    >
-                        Pronto
+                        Cancelar Pedido
                     </button>
 
                 </div>
@@ -149,25 +166,18 @@ function renderizarPedidos(pedidos) {
 
 
 
+
 /* =========================
-   PEDIDO PRONTO
+   ITEM PRONTO
 ========================= */
-async function pedidoPronto(pedido_id) {
+async function itemPronto(item_id) {
 
     try {
 
         await fetch(
-            `http://localhost:5000/pedido/${pedido_id}/status`,
+            `http://localhost:5000/item/${item_id}/pronto`,
             {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    status: "pronto"
-                })
+                method: "PUT"
             }
         );
 
@@ -176,7 +186,7 @@ async function pedidoPronto(pedido_id) {
     } catch (erro) {
 
         console.log(
-            "Erro ao atualizar pedido:",
+            "Erro ao atualizar item:",
             erro
         );
     }

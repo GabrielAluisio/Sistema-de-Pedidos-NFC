@@ -73,7 +73,7 @@ def buscar_pedido_aberto(mesa_id):
     cursor.execute("""
         SELECT * FROM Pedidos
         WHERE mesa_id = %s
-        AND status = 'aberto'
+        AND status IN ('aberto', 'pronto')
         ORDER BY id DESC
         LIMIT 1
     """, (mesa_id,))
@@ -178,6 +178,7 @@ def listar_itens(pedido_id):
 
 @app.route("/cozinha")
 def cozinha():
+
     conn = conectar_bd()
 
     cursor = conn.cursor(dictionary=True)
@@ -186,12 +187,15 @@ def cozinha():
         SELECT
             p.id AS pedido_id,
             m.id AS mesa,
+
             pr.nome AS produto,
+            pr.imagem_url,
+
+            ip.id AS item_id,
             ip.quantidade,
+            ip.status,
 
-            DATE_FORMAT(p.data_hora, '%H:%i') AS data_hora,
-
-            p.status
+            DATE_FORMAT(p.data_hora, '%H:%i') AS horario
 
         FROM pedidos p
 
@@ -204,16 +208,39 @@ def cozinha():
         JOIN produtos pr
             ON pr.id = ip.produto_id
 
-        WHERE p.status = 'aberto'
+        WHERE ip.status = 'pendente'
 
         ORDER BY p.data_hora ASC
     """)
 
     pedidos = cursor.fetchall()
 
-    return jsonify(pedidos), print(pedidos)
+    cursor.close()
+    conn.close()
 
+    return jsonify(pedidos)
 
+@app.route("/item/<int:item_id>/pronto", methods=["PUT"])
+def item_pronto(item_id):
+
+    conn = conectar_bd()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE itens_pedido
+        SET status = 'pronto'
+        WHERE id = %s
+    """, (item_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        "mensagem": "Item pronto"
+    })
 
 
 #O js vai mandar o status do pedido
@@ -305,6 +332,7 @@ def fechar_comanda(pedido_id):
     return jsonify({
         "mensagem": "Comanda fechada"
     })
+    
 
 if __name__ == '__main__':
     app.run(debug=False)
