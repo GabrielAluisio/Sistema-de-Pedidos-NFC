@@ -200,40 +200,7 @@ def cozinha_api():
         cursor.close()
         conn.close()
 
-# =========================
-# LISTAR ITENS DO PEDIDO
-# =========================
-@app.route('/pedido/<int:pedido_id>/itens')
-def listar_itens(pedido_id):
 
-    conn = conectar_bd()
-    cursor = conn.cursor(dictionary=True)
-
-    try:
-        cursor.execute("""
-            SELECT
-                p.nome,
-                p.imagem_url,
-                ip.quantidade,
-                ip.preco_unitario,
-                ip.status
-
-            FROM itens_pedido ip
-
-            JOIN produtos p
-                ON ip.produto_id = p.id
-
-            WHERE ip.pedido_id = %s
-            AND ip.status IN ('pendente', 'pronto')
-        """, (pedido_id,))
-
-        itens = cursor.fetchall()
-
-        return jsonify(itens)
-
-    finally:
-        cursor.close()
-        conn.close()
 # =========================
 # ITEM PRONTO
 # =========================
