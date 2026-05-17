@@ -164,43 +164,66 @@ async function continuarPedido() {
 
 
 
-/*async function cancelarPedido() {
+async function cancelarPedido() {
 
     const confirmar = await Swal.fire({
-        title: "Deseja cancelar pedido?",
-        text: "Seu pedido será apagado!",
+        title: "Cancelar pedido?",
+        text: "Isso vai cancelar toda a comanda.",
         icon: "warning",
 
         showCancelButton: true,
-
-        confirmButtonText: "Sim",
+        confirmButtonText: "Sim, cancelar",
         cancelButtonText: "Não",
 
         iconColor: "#ffffff",
-        confirmButtonColor: "#194e00",
-        cancelButtonColor: "#8b0000",
+        confirmButtonColor: "#8b0000",
+        cancelButtonColor: "#194e00",
         background: "#000000d0",
         color: "#fff"
-
-        
     });
 
-    if (confirmar.isConfirmed) {
+    if (!confirmar.isConfirmed) return;
 
+    try {
+
+        await fetch(
+            `http://localhost:5000/pedido/${pedido_id}/status`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "cancelado"
+                })
+            }
+        );
+
+        // 🔥 limpa estado do front
         carrinho = [];
+        itensEnviados = [];
+        pedido_id = null;
 
         atualizarCarrinho();
+        atualizarBotaoComanda();
+        verificarPedidoExistente();
 
-        const app = document.querySelector(".app");
-        const telaInicial = document.querySelector(".telaInicial");
+        // volta pra tela inicial
+        document.querySelector(".app").classList.add("escondido");
+        document.querySelector(".telaInicial").classList.remove("escondido");
 
-        app.classList.add("escondido");
+        Swal.fire({
+            title: "Pedido cancelado!",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+        });
 
-        telaInicial.classList.remove("escondido");
-        botaoVerItem()
+    } catch (erro) {
+
+        console.log("Erro ao cancelar pedido:", erro);
     }
-}*/
-
+}
 
 function aparecerCarrinho(){
     const modal  = document.querySelector(".verPedido");

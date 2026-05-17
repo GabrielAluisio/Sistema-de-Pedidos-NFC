@@ -163,10 +163,12 @@ def listar_itens(pedido_id):
             p.nome,
             p.imagem_url,
             ip.quantidade,
-            ip.preco_unitario
+            ip.preco_unitario,
+            ip.status
         FROM Itens_pedido ip
         JOIN Produtos p ON ip.produto_id = p.id
         WHERE ip.pedido_id = %s
+        AND ip.status IN ('pendente', 'pronto')
     """, (pedido_id,))
 
     itens = cursor.fetchall()
@@ -174,7 +176,7 @@ def listar_itens(pedido_id):
     cursor.close()
     conn.close()
 
-    return jsonify(itens), print(itens)
+    return jsonify(itens)
 
 @app.route("/cozinha")
 def cozinha():
@@ -295,7 +297,8 @@ def buscar_comanda(pedido_id):
             pr.preco,
             pr.imagem_url,
 
-            ip.quantidade
+            ip.quantidade,
+            ip.status
 
         FROM pedidos p
 
@@ -309,6 +312,7 @@ def buscar_comanda(pedido_id):
             ON pr.id = ip.produto_id
 
         WHERE p.id = %s
+        AND ip.status != 'cancelado'
     """, (pedido_id,))
 
     pedido = cursor.fetchall()
@@ -341,6 +345,26 @@ def fechar_comanda(pedido_id):
         "mensagem": "Comanda fechada"
     })
     
+
+@app.route("/item/<int:item_id>/cancelar", methods=["PUT"])
+def cancelar_item(item_id):
+
+    conn = conectar_bd()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE itens_pedido
+        SET status = 'cancelado'
+        WHERE id = %s
+    """, (item_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        "mensagem": "Item cancelado"
+    })
 
 if __name__ == '__main__':
     app.run(debug=False)

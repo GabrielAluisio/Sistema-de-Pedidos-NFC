@@ -110,12 +110,23 @@ function renderizarPedidos(pedidos) {
                         ${item.quantidade}x ${item.produto}
                     </p>
 
-                    <button 
-                        class="botaoCardCozinha botaoPronto"
-                        onclick="itemPronto(${item.item_id})"
-                    >
-                        Pronto
-                    </button>
+                    <div class="acoesItemCozinha">
+
+                        <button 
+                            class="botaoCardCozinha botaoCancelarItem botaoCancelarCozinha"
+                            onclick="cancelarItem(${item.item_id})"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button 
+                            class="botaoCardCozinha botaoPronto"
+                            onclick="itemPronto(${item.item_id})"
+                        >
+                            Pronto
+                        </button>
+
+                    </div>
 
                 </div>
             `;
@@ -147,16 +158,6 @@ function renderizarPedidos(pedidos) {
                 </article>
 
 
-                <div class="acoesCozinha">
-
-                    <button 
-                        class="botaoCardCozinha botaoCancelarCozinha"
-                        onclick="cancelarPedido(${pedidoId})"
-                    >
-                        Cancelar Pedido
-                    </button>
-
-                </div>
 
             </div>
         `;
@@ -228,7 +229,30 @@ async function cancelarPedido(pedido_id) {
     }
 }
 
+/* =========================
+   CANCELAR ITEM
+========================= */
+async function cancelarItem(item_id) {
 
+    try {
+
+        await fetch(
+            `http://localhost:5000/item/${item_id}/cancelar`,
+            {
+                method: "PUT"
+            }
+        );
+
+        buscarPedidos();
+
+    } catch (erro) {
+
+        console.log(
+            "Erro ao cancelar item:",
+            erro
+        );
+    }
+}
 
 
 /* =========================
