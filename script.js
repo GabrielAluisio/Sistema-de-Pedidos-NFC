@@ -2,8 +2,9 @@ console.log("SCRIPT CARREGADO");
 
 document.addEventListener("DOMContentLoaded", () => {
     verificarPedidoExistente();
-    botaoVerItem();
     buscarProdutos();
+
+    atualizarBotaoComanda();
 });
 
 /// Variaveis 
@@ -152,10 +153,11 @@ async function continuarPedido() {
         imagem_url: item.imagem_url
     }));
 
-    console.log(itensEnviados);
-    console.log("pedido atual:", pedido_id);
+
+    atualizarBotaoComanda();
 
     entrarSistema();
+
 }
 
 
@@ -199,15 +201,6 @@ async function continuarPedido() {
     }
 }*/
 
-function botaoVerItem() {
-    const botaoVer = document.querySelector(".botaoVer");
-
-    if (carrinho.length === 0) {
-        botaoVer.classList.add("naoTem");
-    } else {
-        botaoVer.classList.remove("naoTem");
-    }
-}
 
 function aparecerCarrinho(){
     const modal  = document.querySelector(".verPedido");
@@ -267,11 +260,29 @@ function renderHistorico() {
 
 function excluir(index) {
 
+    
+
     carrinho.splice(index, 1);
+    
+    const pedidoCompleto = document.querySelector(
+        ".botaoEnviarCozinha"
+    );
+
+    if (carrinho.length === 0) {
+
+        pedidoCompleto.disabled = true;
+        pedidoCompleto.style.opacity = "0.5";
+        pedidoCompleto.style.cursor = "not-allowed";
+
+    } else {
+
+        pedidoCompleto.disabled = false;
+        pedidoCompleto.style.opacity = "1";
+        pedidoCompleto.style.cursor = "pointer";
+    }
 
     atualizarCarrinho();
 
-    botaoVerItem();
 
     verCarrinho()
 
@@ -296,6 +307,23 @@ function diminuir(index) {
     } else {
 
         carrinho.splice(index, 1);
+    }
+
+    const pedidoCompleto = document.querySelector(
+        ".botaoEnviarCozinha"
+    );
+
+    if (carrinho.length === 0) {
+
+        pedidoCompleto.disabled = true;
+        pedidoCompleto.style.opacity = "0.5";
+        pedidoCompleto.style.cursor = "not-allowed";
+
+    } else {
+
+        pedidoCompleto.disabled = false;
+        pedidoCompleto.style.opacity = "1";
+        pedidoCompleto.style.cursor = "pointer";
     }
 
     atualizarCarrinho();
@@ -343,19 +371,31 @@ function verCarrinho(){
     });
 
     // 🔵 HISTÓRICO (itens já enviados)
-    conteinerCarrinho.innerHTML += `
-        <div class="historico-container">
-            <div class="historico-header" onclick="toggleHistorico()">
-                ▼ Produtos já pedidos
-            </div>
+    if (itensEnviados.length > 0) {
 
-            <div id="historicoPedidos" class="historico-body escondido">
-            
-            </div>
-        </div>
-    `;
+        conteinerCarrinho.innerHTML += `
+            <div class="historico-container">
 
-    renderHistorico()
+                <div 
+                    class="historico-header" 
+                    onclick="toggleHistorico()"
+                >
+                    ▼ Produtos já pedidos
+                </div>
+
+                <div 
+                    id="historicoPedidos" 
+                    class="historico-body escondido"
+                >
+                </div>
+
+            </div>
+        `;
+
+        renderHistorico();
+
+        
+    }
     
 
     // 💰 TOTAL SOMENTE DO CARRINHO
@@ -371,9 +411,27 @@ function verCarrinho(){
 }
 
 function verPedido(){
-    verCarrinho()
 
-    aparecerCarrinho()
+    const pedidoCompleto = document.querySelector(
+        ".botaoEnviarCozinha"
+    );
+
+    if (carrinho.length === 0) {
+
+        pedidoCompleto.disabled = true;
+        pedidoCompleto.style.opacity = "0.5";
+        pedidoCompleto.style.cursor = "not-allowed";
+
+    } else {
+
+        pedidoCompleto.disabled = false;
+        pedidoCompleto.style.opacity = "1";
+        pedidoCompleto.style.cursor = "pointer";
+    }
+
+    verCarrinho();
+
+    aparecerCarrinho();
 }
 
 function renderizarProdutos(categoria) {
@@ -454,7 +512,7 @@ function adicionarAoCarrinho(produto) {
     }
 
     atualizarCarrinho();
-    botaoVerItem()
+    
 }
 
 
@@ -529,6 +587,28 @@ const telaComanda = document.querySelector(".telaComanda");
 const itensComanda = document.querySelector(".itensComanda");
 
 
+function atualizarBotaoComanda() {
+
+    const botaoComanda =
+        document.querySelector(".botaocomanda");
+
+    if (itensEnviados.length === 0) {
+
+        botaoComanda.disabled = true;
+
+        botaoComanda.style.opacity = "0.5";
+
+        botaoComanda.style.cursor = "not-allowed";
+
+    } else {
+
+        botaoComanda.disabled = false;
+
+        botaoComanda.style.opacity = "1";
+
+        botaoComanda.style.cursor = "pointer";
+    }
+}
 
 /* =========================
    ABRIR COMANDA
@@ -671,10 +751,5 @@ document.querySelector(".voltarComanda")
 ========================= */
 
 function formatarData(data) {
-
-    const horario = new Date(data);
-
-    return horario.toLocaleString(
-        "pt-BR"
-    );
+    return data;
 }
