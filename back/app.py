@@ -9,15 +9,29 @@ from dotenv import load_dotenv
 import os
 
 #Biblioteca para o navegador na bloquear 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder='../front',
+    static_folder='../front'
+)
 CORS(app, origins="*")
 
 
 
+
 load_dotenv()
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/cozinha')
+def cozinha_page():
+    return render_template('cozinha.html')
+
 
 #Criar função para conectar com o bd
 def conectar_bd():
@@ -178,8 +192,8 @@ def listar_itens(pedido_id):
 
     return jsonify(itens)
 
-@app.route("/cozinha")
-def cozinha():
+@app.route('/api/cozinha')
+def cozinha_api():
 
     conn = conectar_bd()
 

@@ -1,4 +1,4 @@
-const API_URL = "https://SEU-APP.onrender.com";
+const API_URL = "https://sistema-de-pedidos-419z.onrender.com";
 
 /// Cozinha
 
@@ -28,7 +28,7 @@ async function buscarPedidos() {
     try {
 
         const response = await fetch(
-            `${API_URL}/cozinha`
+            `${API_URL}/api/cozinha`
         );
 
         const pedidos = await response.json();
